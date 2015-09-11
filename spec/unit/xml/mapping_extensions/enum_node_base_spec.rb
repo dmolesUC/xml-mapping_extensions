@@ -20,7 +20,7 @@ module XML
       my_enum_node :my_enum, '@my_enum', default_value: nil
 
       def self.from_str(enum_str)
-        enum_str ? xml_string = "<elem my_enum='#{enum_str}'/>" : xml_string = '<elem/>'
+        xml_string = enum_str ? "<elem my_enum='#{enum_str}'/>" : '<elem/>'
         doc = REXML::Document.new(xml_string)
         load_from_xml(doc.root)
       end
