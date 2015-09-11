@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module XML
   module MappingExtensions
-    class Elem
+    class TimeNodeSpecElem
       include ::XML::Mapping
       time_node :time, '@time', default_value: nil
 
@@ -12,15 +12,14 @@ module XML
         load_from_xml(doc.root)
       end
     end
-
     describe TimeNode do
 
       def to_time(str)
-        Elem.from_str(str).time
+        TimeNodeSpecElem.from_str(str).time
       end
 
       def to_text(time)
-        elem = Elem.new
+        elem = TimeNodeSpecElem.new
         elem.time = time
         xml = elem.save_to_xml
         xml.attributes['time']
