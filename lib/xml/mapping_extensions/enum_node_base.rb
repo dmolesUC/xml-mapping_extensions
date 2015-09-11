@@ -19,10 +19,6 @@ module XML
         enum_class.parse(xml_text)
       end
 
-      def to_xml_text(value)
-        value.to_s
-      end
-
     end
   end
 end

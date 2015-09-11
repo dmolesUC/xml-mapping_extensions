@@ -8,10 +8,6 @@ module XML
       def to_value(xml_text)
         URI(xml_text.strip)
       end
-
-      def to_xml_text(value)
-        value.to_s
-      end
     end
     ::XML::Mapping.add_node_class UriNode
   end

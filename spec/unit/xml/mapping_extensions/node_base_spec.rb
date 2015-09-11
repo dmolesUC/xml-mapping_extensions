@@ -27,8 +27,11 @@ module XML
       end
 
       describe '#to_xml_text' do
-        it 'should be abstract' do
-          expect { @node.to_xml_text('some value') }.to raise_error(NoMethodError)
+        it 'should call to_s by default' do
+          values = ['elvis', 123, Object.new]
+          values.each do |v|
+            expect(@node.to_xml_text(v)).to eq(v.to_s)
+          end
         end
       end
     end

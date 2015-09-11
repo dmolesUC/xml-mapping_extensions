@@ -8,7 +8,7 @@ module XML
     #
     # Usage:
     #   - extend this class
-    #   - override `to_value` and `to_xml_text` to do your conversion
+    #   - override `to_value` (and, optionally, `to_xml_text`) to do your conversion
     #   - call `::XML::Mapping.add_node_class` to add your new node class
     class NodeBase < ::XML::Mapping::SingleAttributeNode
 
@@ -37,9 +37,10 @@ module XML
       end
 
       # Override this method to convert object values to XML text.
-      # @param _value [Object] The object value to convert
-      def to_xml_text(_value)
-        fail NoMethodError, "#{self.class} should override #to_xmL to convert an object value to an XML string"
+      # The default implementation simply calls `to_s`.
+      # @param value [Object] The object value to convert
+      def to_xml_text(value)
+        value.to_s
       end
 
     end
