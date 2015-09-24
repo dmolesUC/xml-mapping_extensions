@@ -5,9 +5,10 @@ module XML
     class DateNodeSpecElem
       include ::XML::Mapping
       date_node :date, '@date', default_value: nil
+      date_node :zulu_date, '@zulu_date', default_value: nil, zulu: true
 
       def self.from_str(date_str)
-        xml_string = "<elem date='#{date_str}'/>"
+        xml_string = "<elem date='#{date_str}' zulu_date='#{date_str}'/>"
         doc = REXML::Document.new(xml_string)
         load_from_xml(doc.root)
       end
@@ -23,6 +24,13 @@ module XML
         elem.date = date
         xml = elem.save_to_xml
         xml.attributes['date']
+      end
+
+      def to_zulu_text(date)
+        elem = DateNodeSpecElem.new
+        elem.zulu_date = date
+        xml = elem.save_to_xml
+        xml.attributes['zulu_date']
       end
 
       it 'parses a date' do
@@ -46,6 +54,12 @@ module XML
       it 'outputs a date' do
         expected = '2002-09-24'
         actual = to_text(Date.new(2002, 9, 24))
+        expect(actual).to eq(expected)
+      end
+
+      it 'outputs a UTC "zulu" date (time zone designator "Z")' do
+        expected = '2002-09-24Z'
+        actual = to_zulu_text(Date.new(2002, 9, 24))
         expect(actual).to eq(expected)
       end
 
