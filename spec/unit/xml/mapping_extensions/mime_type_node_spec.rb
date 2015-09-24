@@ -26,6 +26,15 @@ module XML
         xml.attributes['mime_type']
       end
 
+      it 'converts a string value to a MIME type' do
+        mt_string = 'application/x-whatever'
+        mt = MIME::Type.new(mt_string)
+
+        elem = MimeTypeSpecElem.new
+        elem.mime_type = mt_string
+        expect(elem.mime_type).to eq(mt)
+      end
+
       it 'accepts a standard MIME type' do
         mt_str = 'text/plain'
         mt = MIME::Types[mt_str].first
