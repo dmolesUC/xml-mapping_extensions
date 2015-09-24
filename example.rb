@@ -50,6 +50,4 @@ xml = elem.save_to_xml
 formatter = REXML::Formatters::Pretty.new
 formatter.compact = true
 
-puts(formatter.write(xml, ""))
-
-
+puts(formatter.write(xml, ''))
