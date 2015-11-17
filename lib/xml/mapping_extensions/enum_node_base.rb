@@ -16,7 +16,13 @@ module XML
 
       def to_value(xml_text)
         enum_class = self.class::ENUM_CLASS
-        enum_class.parse(xml_text)
+        enum_class.map do |_, enum|
+          return enum if enum.value == xml_text
+        end
+      end
+
+      def to_xml_text(value)
+        value.value
       end
 
     end

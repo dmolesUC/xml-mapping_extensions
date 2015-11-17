@@ -8,6 +8,7 @@ module XML
 
       define :FOO, 'foo'
       define :BAR, 'bar'
+      define :BAZ_QUX, 'baz_qux'
     end
 
     class MyEnumNode < EnumNodeBase
@@ -39,11 +40,15 @@ module XML
       end
 
       it 'parses an enum value' do
-        expect(to_my_enum('foo')).to eq(MyEnum::FOO)
+        MyEnum.map do |_, enum|
+          expect(to_my_enum(enum.value)).to eq(enum)
+        end
       end
 
       it 'transforms an enum to a string' do
-        expect(to_text(MyEnum::BAR)).to eq('bar')
+        MyEnum.map do |_, enum|
+          expect(to_text(enum)).to eq(enum.value)
+        end
       end
 
       it 'parses a missing value as nil' do

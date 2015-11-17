@@ -1,3 +1,9 @@
+## 0.2.0 (16 November 2015)
+
+- Fixed `EnumNodeBase` to correctly parse string values as enum instances,
+  and to correctly map enum instances to string values.
+  (See [ruby-enum issue #6](https://github.com/dblock/ruby-enum/issues/6).)
+
 ## 0.1.1 (24 September 2015)
 
 - Added support for UTC "Zulu" time designator to `DateNode`
