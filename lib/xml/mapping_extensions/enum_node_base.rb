@@ -22,7 +22,7 @@ module XML
       end
 
       def to_xml_text(value)
-        value.value
+        value.respond_to?(:value) ? value.value : value.to_s
       end
 
     end

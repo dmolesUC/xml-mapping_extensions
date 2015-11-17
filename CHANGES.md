@@ -1,3 +1,9 @@
+## 0.2.1 (16 November 2015)
+
+- Modified `EnumNodeBase` to deal with either enum object instances or enum value
+  constants (e.g. `MyEnum::MY_VALUE` -- which happens to be the string value
+  of that enum instance, not the enum instance itself as one might expect).
+
 ## 0.2.0 (16 November 2015)
 
 - Fixed `EnumNodeBase` to correctly parse string values as enum instances,

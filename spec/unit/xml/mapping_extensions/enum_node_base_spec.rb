@@ -61,6 +61,13 @@ module XML
         expect(to_text(nil)).to be_nil
       end
 
+      it 'accepts enum constants' do
+        elem = EnumNodeBaseSpecElem.new
+        elem.my_enum = MyEnum::BAZ_QUX
+        xml_string = '<elem my_enum="baz_qux"/>'
+        expect(elem.save_to_xml).to be_xml(xml_string)
+      end
+
       it 'round-trips to XML' do
         xml_string = '<elem my_enum="baz_qux"/>'
         doc = REXML::Document.new(xml_string)
