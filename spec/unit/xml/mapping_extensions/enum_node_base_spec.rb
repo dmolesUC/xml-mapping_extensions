@@ -20,6 +20,8 @@ module XML
       include ::XML::Mapping
       my_enum_node :my_enum, '@my_enum', default_value: nil
 
+      root_element_name 'elem'
+
       def self.from_str(enum_str)
         xml_string = enum_str ? "<elem my_enum='#{enum_str}'/>" : '<elem/>'
         doc = REXML::Document.new(xml_string)
@@ -57,6 +59,13 @@ module XML
 
       it 'doesn\'t set an attribute for a nil value' do
         expect(to_text(nil)).to be_nil
+      end
+
+      it 'round-trips to XML' do
+        xml_string = '<elem my_enum="baz_qux"/>'
+        doc = REXML::Document.new(xml_string)
+        elem = EnumNodeBaseSpecElem.load_from_xml(doc.root)
+        expect(elem.save_to_xml).to be_xml(xml_string)
       end
     end
   end
