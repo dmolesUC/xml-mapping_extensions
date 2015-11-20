@@ -1,8 +1,12 @@
+## 0.3.1 (19 November 2015)
+
+- Update to [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) 0.1.2.
+
 ## 0.3.0 (19 November 2015)
 
 - Replaced `EnumNodeBase` with (simpler) `TypesafeEnumNode` for interoperability
   with [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) rather than
-  [ruby-enum](https://github.com/dblock/ruby-enum/)
+  [ruby-enum](https://github.com/dblock/ruby-enum/).
 
 ## 0.2.1 (16 November 2015)
 
