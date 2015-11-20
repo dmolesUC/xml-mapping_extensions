@@ -16,7 +16,6 @@ classes, or use one of the provided implementations.
 
 - `NodeBase`: Base class for simple single-attribute nodes that
    convert XML strings to object values.
-- `EnumNodeBase`: maps XML strings to `Ruby::Enum` values
 
 Note that you must call `::XML::Mapping.add_node_class` for your new node class
 to be registered with the XML mapping engine.
@@ -27,6 +26,7 @@ to be registered with the XML mapping engine.
 - `TimeNode`: ISO 8601 strings to `Time` objects
 - `UriNode`: maps URI strings to `URI` objects
 - `MimeTypeNode`: maps MIME type strings to `MIME::Type` objects
+- `TypesafeEnumNode`: maps XML strings to [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) values
 
 ### Example
 
@@ -50,13 +50,13 @@ end
 #### Reading XML:
 
 ```ruby
-xml_str = "<my_elem>
+xml_str = '<my_elem>
   <plain_date>1999-12-31</plain_date>
   <zulu_date>2000-01-01Z</zulu_date>
   <time>2000-01-01T02:34:56Z</time>
   <uri>http://example.org</uri>
   <mime_type>text/plain</mime_type>
-</my_elem>"
+</my_elem>'
 
 xml_doc = REXML::Document.new(xml_str)
 xml_elem = xml_doc.root
