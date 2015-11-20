@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/dmolesUC3/xml-mapping_extensions.png?branch=master)](https://travis-ci.org/dmolesUC3/xml-mapping_extensions)
 [![Code Climate](https://codeclimate.com/github/dmolesUC3/xml-mapping_extensions.png)](https://codeclimate.com/github/dmolesUC3/xml-mapping_extensions)
 [![Inline docs](http://inch-ci.org/github/dmolesUC3/xml-mapping_extensions.png)](http://inch-ci.org/github/dmolesUC3/xml-mapping_extensions)
+[![Gem Version](https://img.shields.io/gem/v/xml-mapping_extensions.svg)](https://github.com/dmolesUC3/xml-mapping_extensions/releases)
 
 Additional mapping nodes and other utility classes for working with
 [XML::Mapping](http://multi-io.github.io/xml-mapping/).
