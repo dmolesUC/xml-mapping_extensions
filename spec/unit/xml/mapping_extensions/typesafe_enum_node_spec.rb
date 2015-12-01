@@ -90,6 +90,16 @@ module XML
         elem = TypesafeEnumNodeSpecElem.load_from_xml(doc.root)
         expect(elem.save_to_xml).to be_xml(xml_string)
       end
+
+      it 'requires a class' do
+        expect do
+          class TypesafeEnumNodeSpecElem
+            include ::XML::Mapping
+
+            typesafe_enum_node :my_bad_enum, '@my_bad_enum'
+          end
+        end.to raise_error(ArgumentError)
+      end
     end
   end
 end

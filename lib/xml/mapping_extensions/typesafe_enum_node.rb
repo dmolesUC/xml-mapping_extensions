@@ -14,6 +14,7 @@ module XML
       def initialize(*args)
         super
         @enum_class = @options[:class]
+        fail ArgumentError, "No :class found for TypesafeEnumNode #{@attrname} of #{@owner}" unless @enum_class
       end
 
       def to_value(xml_text)
