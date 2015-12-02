@@ -24,7 +24,7 @@ to be registered with the XML mapping engine.
 #### Example
 
 ```ruby
-class LaTeXRationalNode < NodeBase
+class LaTeXRationalNode < XML::MappingExtensions::NodeBase
   def to_value(xml_text)
     match_data = /\\frac\{([0-9.]+)\}\{([0-9.]+)\}/.match(xml_text)
     Rational("#{match_data[1]}/#{match_data[2]}")
