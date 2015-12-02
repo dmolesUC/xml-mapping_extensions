@@ -21,6 +21,21 @@ classes, or use one of the provided implementations.
 Note that you must call `::XML::Mapping.add_node_class` for your new node class
 to be registered with the XML mapping engine.
 
+#### Example
+
+```ruby
+class LaTeXRationalNode < NodeBase
+  def to_value(xml_text)
+    match_data = /\\frac\{([0-9.]+)\}\{([0-9.]+)\}/.match(xml_text)
+    Rational("#{match_data[1]}/#{match_data[2]}")
+  end
+
+  def to_xml_text(value)
+    "\\frac{#{value.numerator}}{#{value.denominator}}"
+  end
+end
+```
+
 ### Provided implementations
 
 - `DateNode`: maps XML Schema dates to `Date` objects
@@ -29,7 +44,7 @@ to be registered with the XML mapping engine.
 - `MimeTypeNode`: maps MIME type strings to `MIME::Type` objects
 - `TypesafeEnumNode`: maps XML strings to [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) values
 
-### Example
+#### Example
 
 ```ruby
 require 'xml/mapping_extensions'
