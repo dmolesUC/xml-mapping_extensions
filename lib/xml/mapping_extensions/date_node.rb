@@ -7,11 +7,6 @@ module XML
     # XML mapping for XML Schema dates.
     # Known limitation: loses time zone info
     class DateNode < NodeBase
-
-      def initialize(*args)
-        super
-      end
-
       # Whether date should be output with UTC "Zulu" time
       # designator ("Z")
       # @return [Boolean, nil] True if date should be output
