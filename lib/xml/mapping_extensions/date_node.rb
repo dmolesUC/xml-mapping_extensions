@@ -5,7 +5,8 @@ require 'time'
 module XML
   module MappingExtensions
     # XML mapping for XML Schema dates.
-    # Known limitation: loses time zone info
+    # Known limitation: loses time zone info (Ruby `Date` doesn't
+    # support it)
     class DateNode < NodeBase
       # Whether date should be output with UTC "Zulu" time
       # designator ("Z")
@@ -15,15 +16,17 @@ module XML
         @options[:zulu]
       end
 
-      # param xml_text [String] an XML Schema date
+      # Converts an XML Schema date string to a `Date` object
+      # @param xml_text [String] an XML Schema date
       # @return [Date] the value as a `Date`
       def to_value(xml_text)
         Date.xmlschema(xml_text)
       end
 
+      # Converts a `Date` object to an XML schema string
       # @param value [Date] the value as a `Date`
       # @return [String] the value as an XML Schema date string, without
-      #   time zone information
+      #   time zone information unless {#zulu} is set
       def to_xml_text(value)
         text = value.xmlschema
         zulu ? "#{text}Z" : text
