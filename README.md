@@ -5,13 +5,37 @@
 [![Inline docs](http://inch-ci.org/github/dmolesUC3/xml-mapping_extensions.svg)](http://inch-ci.org/github/dmolesUC3/xml-mapping_extensions)
 [![Gem Version](https://img.shields.io/gem/v/xml-mapping_extensions.svg)](https://github.com/dmolesUC3/xml-mapping_extensions/releases)
 
-Additional mapping nodes and other utility classes for working with
+Additional mapping nodes and other utility code for working with
 [XML::Mapping](http://multi-io.github.io/xml-mapping/).
 
-## Usage
+## Extension methods
 
-Require `xml/mapping_extensions` and extend one of the abstract node
-classes, or use one of the provided implementations.
+The `parse_xml` method supplements
+[XML::Mapping::ClassMethods.load_from_xml](http://www.rubydoc.info/github/multi-io/xml-mapping/master/XML/Mapping/ClassMethods#load_from_xml-instance_method)
+by abstracting away the difference between strings, XML documents, XML elements,
+files, and IO-like objects.
+
+```ruby
+my_xml_path = 'my_xml.xml'
+my_xml_file = File.new(my_xml_path)
+my_xml_string = File.read(my_xml_path)
+my_xml_io = StringIO.new(my_xml_string)
+my_xml_document = REXML::Document.new(my_xml_string)
+my_xml_element = my_xml_document.root
+
+# Standard XML::Mapping load_from_xml method
+elem = MyXMLClass.load_from_xml(my_xml_element)
+
+# parse_xml equivalent
+[my_xml_file, my_xml_string, my_xml_io, my_xml_document, my_xml_element].each do |xml_source|
+  expect(MyXMLClass.parse_xml(xml_source)).to eq(elem) # assuming MyXMLClass implements ==
+end
+```
+
+## Custom nodes
+
+To create a custom node type, require `xml/mapping_extensions` and extend one of
+the abstract node classes, or use one of the provided implementations.
 
 ### Abstract nodes
 

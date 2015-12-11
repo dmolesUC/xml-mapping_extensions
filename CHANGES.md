@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Add `XML::Mapping::ClassMethods#parse_xml`
+
 ## 0.3.1 (19 November 2015)
 
 - Update to [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) 0.1.2.
