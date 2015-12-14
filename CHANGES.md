@@ -1,6 +1,6 @@
 ## 0.3.2
 
-- Add `XML::Mapping::ClassMethods#parse_xml`
+- Add `XML::Mapping#write_xml` and `XML::Mapping::ClassMethods#parse_xml`
 
 ## 0.3.1 (19 November 2015)
 

@@ -10,8 +10,31 @@ Additional mapping nodes and other utility code for working with
 
 ## Extension methods
 
+This gem adds two methods, `write_xml` and `parse_xml`, to XML mapping instances and classes respectively, to reduce
+boilerplate.
+
+The `write_xml` method supplements [XML::Mapping#save_to_xml] by writing the object out as a `String` rather than as an `REXML::Element`.
+
+```ruby
+elem = MyElement.new
+elem.attribute = 123
+elem.text = 'element text'
+elem.children = ['child 1', 'child 2']
+puts elem.write_xml
+```
+
+outputs
+
+```xml
+<my-element attribute='123'>
+  element text
+  <child>child 1</child>
+  <child>child 2</child>
+</my-element>
+```
+
 The `parse_xml` method supplements
-[XML::Mapping::ClassMethods.load_from_xml](http://www.rubydoc.info/github/multi-io/xml-mapping/master/XML/Mapping/ClassMethods#load_from_xml-instance_method)
+[XML::Mapping::ClassMethods#load_from_xml](http://multi-io.github.io/xml-mapping/XML/Mapping/ClassMethods.html#method-i-load_from_xml)
 by abstracting away the difference between strings, XML documents, XML elements,
 files, and IO-like objects.
 

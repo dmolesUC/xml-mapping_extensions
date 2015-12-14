@@ -8,6 +8,21 @@ module XML
   end
 
   module Mapping
+
+    # Writes this mapped object as an XML string.
+    #
+    # @param options [Hash] the options to be passed to
+    #   [XML::Mapping#save_to_xml](http://multi-io.github.io/xml-mapping/XML/Mapping.html#method-i-save_to_xml)
+    # @return [String] the XML form of the object, as a compact, pretty-printed string.
+    def write_xml(options = { mapping: :_default })
+      xml = save_to_xml(options)
+      formatter = REXML::Formatters::Pretty.new
+      formatter.compact = true
+      io = StringIO.new
+      formatter.write(xml, io)
+      io.string
+    end
+
     module ClassMethods
       # Create a new instance of this class from the XML contained in
       # `xml`, which can be a string, REXML document, or REXML element

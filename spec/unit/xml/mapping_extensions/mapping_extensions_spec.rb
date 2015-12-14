@@ -3,31 +3,44 @@ require 'tempfile'
 
 module XML
   module Mapping
-    module ClassMethods
-      class ParseXMLSpecElement
-        include ::XML::Mapping
-        include Comparable
+    class ParseXMLSpecElement
+      include ::XML::Mapping
+      include Comparable
 
-        root_element_name 'element'
+      root_element_name 'element'
 
-        numeric_node :attribute, '@attribute'
-        text_node :text, 'text()'
-        array_node :children, 'child', class: String
+      numeric_node :attribute, '@attribute'
+      text_node :text, 'text()'
+      array_node :children, 'child', class: String
 
-        def <=>(other)
-          return nil unless self.class == other.class
-          [:attribute, :text, :children].each do |p|
-            order = send(p) <=> other.send(p)
-            return order if order != 0
-          end
-          0
+      def <=>(other)
+        return nil unless self.class == other.class
+        [:attribute, :text, :children].each do |p|
+          order = send(p) <=> other.send(p)
+          return order if order != 0
         end
-
-        def hash
-          [:attribute, :text, :children].hash
-        end
+        0
       end
 
+      def hash
+        [:attribute, :text, :children].hash
+      end
+    end
+
+    describe '#write_xml' do
+      it 'writes an XML string' do
+        elem = ParseXMLSpecElement.new
+        elem.attribute = 123
+        elem.text = 'element text'
+        elem.children = ['child 1', 'child 2']
+        expected_xml = elem.save_to_xml
+        xml_string = elem.write_xml
+        expect(xml_string).to be_a(String)
+        expect(xml_string).to be_xml(expected_xml)
+      end
+    end
+
+    module ClassMethods
       describe '#parse_xml' do
 
         before(:each) do
