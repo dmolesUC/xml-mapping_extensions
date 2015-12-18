@@ -1,3 +1,7 @@
+## 0.3.3
+
+- Fix issue where `StringIO` wasn't always implicitly `required`
+
 ## 0.3.2
 
 - Add `XML::Mapping#write_xml` and `XML::Mapping::ClassMethods#parse_xml`

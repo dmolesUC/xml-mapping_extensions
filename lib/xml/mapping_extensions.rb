@@ -1,4 +1,5 @@
 require 'xml/mapping'
+require 'stringio'
 
 module XML
   # Additional mapping nodes and other utility classes for working with
@@ -18,7 +19,7 @@ module XML
       xml = save_to_xml(options)
       formatter = REXML::Formatters::Pretty.new
       formatter.compact = true
-      io = StringIO.new
+      io = ::StringIO.new
       formatter.write(xml, io)
       io.string
     end
