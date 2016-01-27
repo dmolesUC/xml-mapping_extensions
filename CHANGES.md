@@ -1,8 +1,13 @@
-## 0.3.3
+## 0.3.4 (27 January 2016)
+
+- Make gemspec smart enough to handle SSH checkouts
+- Update to [typesafe_enum](https://github.com/dmolesUC3/typesafe_enum) 0.1.5
+
+## 0.3.3 (18 December 2015)
 
 - Fix issue where `StringIO` wasn't always implicitly `required`
 
-## 0.3.2
+## 0.3.2 (11 December 2015)
 
 - Add `XML::Mapping#write_xml` and `XML::Mapping::ClassMethods#parse_xml`
 
