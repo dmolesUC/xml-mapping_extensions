@@ -37,9 +37,9 @@ module XML
       end
 
       # Override this method to convert XML text to an object value
-      # @param _xml_text [String] The XML string to parse
+      # @param xml_text [String] The XML string to parse
       # @return [Object] The object value
-      def to_value(_xml_text)
+      def to_value(xml_text) # rubocop:disable Lint/UnusedMethodArgument
         fail NoMethodError, "#{self.class} should override #to_value to convert an XML string to an object value"
       end
 
