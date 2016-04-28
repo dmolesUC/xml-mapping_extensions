@@ -63,6 +63,67 @@ module XML
         expect(actual).to eq(expected)
       end
 
+      describe 'works with Date.today' do
+        it 'as plain date' do
+          date = Date.today
+          expected = format('%04d-%02d-%02d', date.year, date.month, date.day)
+          actual = to_text(date)
+          expect(actual).to eq(expected)
+        end
+
+        it 'as "zulu" date' do
+          date = Date.today
+          expected = format('%04d-%02d-%02dZ', date.year, date.month, date.day)
+          actual = to_zulu_text(date)
+          expect(actual).to eq(expected)
+        end
+      end
+
+      if Date.respond_to?(:current)
+        describe 'works with Date.current' do
+          it 'as plain date' do
+            date = Date.current
+            expected = format('%04d-%02d-%02d', date.year, date.month, date.day)
+            actual = to_text(date)
+            expect(actual).to eq(expected)
+          end
+
+          it 'as "zulu" date' do
+            date = Date.current
+            expected = format('%04d-%02d-%02dZ', date.year, date.month, date.day)
+            actual = to_zulu_text(date)
+            expect(actual).to eq(expected)
+          end
+        end
+      end
+
+      if Time.respond_to?(:zone)
+        describe 'works with Time.zone' do
+          before(:each) do
+            @old_zone = Time.zone
+            Time.zone = 'UTC'
+          end
+          after(:each) do
+            Time.zone = @old_zone
+          end
+
+          it 'as plain date' do
+            date = Time.zone.today
+            expected = format('%04d-%02d-%02d', date.year, date.month, date.day)
+            actual = to_text(date)
+            expect(actual).to eq(expected)
+          end
+
+          it 'as "zulu" date' do
+            date = Time.zone.today
+            expected = format('%04d-%02d-%02dZ', date.year, date.month, date.day)
+            actual = to_zulu_text(date)
+            expect(actual).to eq(expected)
+          end
+
+        end
+      end
+
     end
   end
 end

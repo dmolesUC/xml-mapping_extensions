@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.5'
   spec.add_dependency 'xml-mapping', '~> 0.10'
 
+  spec.add_development_dependency 'activesupport', '~> 4.2' # for testing
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
   spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3.2'

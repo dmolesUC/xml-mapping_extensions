@@ -25,6 +25,9 @@ module XML
       def extract_attr_value(xml)
         xml_text = default_when_xpath_err { @path.first(xml).text }
         to_value(xml_text) if xml_text
+      rescue => e
+        bad_value = xml_text ? "'#{xml_text}'" : 'nil'
+        raise e, "#{@owner}.#{@attrname}: Can't parse #{bad_value} as #{self.class}: #{e.message}"
       end
 
       # Implements `::XML::Mapping::SingleAttributeNode#set_attr_value`.

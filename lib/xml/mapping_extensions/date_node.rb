@@ -28,8 +28,8 @@ module XML
       # @return [String] the value as an XML Schema date string, without
       #   time zone information unless {#zulu} is set
       def to_xml_text(value)
-        text = value.xmlschema
-        zulu ? "#{text}Z" : text
+        text = value.iso8601 # use iso8601 instead of xmlschema in case of ActiveSupport shenanigans
+        (zulu && !text.end_with?('Z')) ? "#{text}Z" : text
       end
     end
     ::XML::Mapping.add_node_class DateNode

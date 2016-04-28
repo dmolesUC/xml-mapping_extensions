@@ -12,14 +12,13 @@ namespace :spec do
     task.pattern = 'unit/**/*_spec.rb'
   end
 
-  desc 'Run all acceptance tests'
-  RSpec::Core::RakeTask.new(:acceptance) do |task|
-    ENV['COVERAGE'] = nil
-    task.rspec_opts = %w(--color --format documentation --order default)
-    task.pattern = 'acceptance/**/*_spec.rb'
+  desc 'Run all unit tests with ActiveSupport required'
+  RSpec::Core::RakeTask.new(:active_support_unit) do |task|
+    task.rspec_opts = %w(--color --format documentation --order default --require active_support/all)
+    task.pattern = 'unit/**/*_spec.rb'
   end
 
-  task all: [:unit, :acceptance]
+  task all: [:unit, :active_support_unit]
 end
 
 desc 'Run all tests'
@@ -53,4 +52,4 @@ end
 # Defaults
 
 desc 'Run unit tests, check test coverage, run acceptance tests, check code style'
-task default: [:coverage, 'spec:acceptance', :rubocop]
+task default: [:coverage, 'spec:active_support_unit', :rubocop]
