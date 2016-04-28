@@ -1,3 +1,8 @@
+## 0.3.5 (28 April 2016)
+
+- `DateNode`: Fix issues with `Date.xmlschema` misbehaving in a Rails / ActiveSupport environment
+- `NodeBase`: Improve parsing error reporting, so that we get the node owner and attribute and the offending value
+
 ## 0.3.4 (27 January 2016)
 
 - Make gemspec smart enough to handle SSH checkouts
