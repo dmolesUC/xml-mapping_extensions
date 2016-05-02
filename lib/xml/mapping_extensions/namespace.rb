@@ -28,7 +28,7 @@ module XML
       # Sets `uri` as the default (no-prefix) namespace on `elem`, with
       # `schema_location` as the schema location.
       # @param elem [REXML::Element] The element to set the namespace on
-      def set_default_namespace(elem)
+      def set_default_namespace(elem) # rubocop:disable Style/AccessorMethodName
         elem.add_namespace(uri)
         elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         elem.add_attribute('xsi:schemaLocation', schema_location)
@@ -37,7 +37,7 @@ module XML
       # Sets `prefix` as the prefix for namespace `uri` on the specified document
       # root element, and all its descendants that have that namespace.
       # @param root [REXML::Element] The document root to set the namespace on
-      def set_prefix(root)
+      def set_prefix(root) # rubocop:disable Style/AccessorMethodName
         return unless prefix
         set_prefix_recursive(root)
         root.add_namespace(nil) if root.attributes['xmlns'] == uri # clear the no-prefix namespace
@@ -46,7 +46,7 @@ module XML
 
       private
 
-      def set_prefix_recursive(elem)
+      def set_prefix_recursive(elem) # rubocop:disable Style/AccessorMethodName
         return unless elem.namespace == uri
         # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
         elem.name = "#{prefix}:#{elem.name}"

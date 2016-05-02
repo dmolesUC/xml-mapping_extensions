@@ -5,8 +5,13 @@ module XML
     describe Namespace do
       describe '#set_default_namespace' do
         it 'sets the default namespace'
+        it 'sets the schema location'
+      end
 
-        # TODO: Other tests
+      describe '#set_prefix' do
+        it 'sets the prefix'
+        it 'clears the no-prefix namespace, if previously present'
+        it 'leaves an unrelated no-prefix namespace intact'
       end
     end
   end
