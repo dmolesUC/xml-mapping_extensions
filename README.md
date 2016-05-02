@@ -8,6 +8,19 @@
 Additional mapping nodes and other utility code for working with
 [XML::Mapping](http://multi-io.github.io/xml-mapping/).
 
+### Table of contents
+
+- [Extension methods](#extension-methods)
+- [Custom nodes](#custom-nodes)
+  - [Abstract nodes](#abstract-nodes)
+    - [Example](#example)
+  - [Provided implementations](#provided-implementations)
+    - [Example](#example-1)
+    - [Reading XML:](#reading-xml)
+    - [Writing XML:](#writing-xml)
+- [Namespaces](#namespaces)
+
+
 ## Extension methods
 
 This gem adds two methods, `write_xml` and `parse_xml`, to XML mapping instances and classes respectively, to reduce
