@@ -12,13 +12,13 @@ module XML
       # @return [String, nil] the namespace prefix
       attr_reader :prefix
 
-      # @return [String] the string form of the schema location URI
+      # @return [String] the schema location URI(s), as a space-separated string list
       attr_reader :schema_location
 
       # Creates a new {Namespace}
       # @param uri [URI, String] the namespace URI
       # @param prefix [String, nil] the namespace prefix
-      # @param schema_location [URI, String] the schema location
+      # @param schema_location [String] the schema location(s)
       def initialize(uri:, prefix: nil, schema_location:)
         @uri = uri.to_s
         @prefix = prefix
