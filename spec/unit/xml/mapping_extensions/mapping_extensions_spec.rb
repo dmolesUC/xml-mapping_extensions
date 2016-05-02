@@ -3,7 +3,7 @@ require 'tempfile'
 
 module XML
   module Mapping
-    class ParseXMLSpecElement
+    class MXSpecObject
       include ::XML::Mapping
       include Comparable
 
@@ -29,14 +29,52 @@ module XML
 
     describe '#write_xml' do
       it 'writes an XML string' do
-        elem = ParseXMLSpecElement.new
-        elem.attribute = 123
-        elem.text = 'element text'
-        elem.children = ['child 1', 'child 2']
-        expected_xml = elem.save_to_xml
-        xml_string = elem.write_xml
+        obj = MXSpecObject.new
+        obj.attribute = 123
+        obj.text = 'element text'
+        obj.children = ['child 1', 'child 2']
+        expected_xml = obj.save_to_xml
+        xml_string = obj.write_xml
         expect(xml_string).to be_a(String)
         expect(xml_string).to be_xml(expected_xml)
+      end
+    end
+
+    describe ':namespace' do
+      it 'sets the namespace on save' do
+        uri = 'http://example.org/px/'
+        schema_location = 'http://example.org/px.xsd'
+        namespace = MappingExtensions::Namespace.new(uri: uri, prefix: 'px', schema_location: schema_location)
+
+        obj = MXSpecObject.new
+        obj.attribute = 123
+        obj.text = 'element text'
+        obj.children = ['child 1', 'child 2']
+        obj.namespace = namespace
+
+        namespace_attribs = "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='#{schema_location}' xmlns:px='#{uri}'"
+        expected = "<px:element #{namespace_attribs} attribute='123'>element text<px:child>child 1</px:child><px:child>child 2</px:child></px:element>"
+
+        expect(obj.save_to_xml).to be_xml(expected)
+        puts(obj.write_xml)
+      end
+
+      it 'works without prefixes' do
+        uri = 'http://example.org/px/'
+        schema_location = 'http://example.org/px.xsd'
+        namespace = MappingExtensions::Namespace.new(uri: uri, schema_location: schema_location)
+
+        obj = MXSpecObject.new
+        obj.attribute = 123
+        obj.text = 'element text'
+        obj.children = ['child 1', 'child 2']
+        obj.namespace = namespace
+
+        namespace_attribs = "xmlns='#{uri}' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='#{schema_location}'"
+        expected = "<element #{namespace_attribs} attribute='123'>element text<child>child 1</child><child>child 2</child></element>"
+
+        expect(obj.save_to_xml).to be_xml(expected)
+        puts(obj.write_xml)
       end
     end
 
@@ -51,28 +89,28 @@ module XML
                          </element>'
           @xml_document = REXML::Document.new(@xml_string)
           @xml_element = @xml_document.root
-          @expected_element = ParseXMLSpecElement.load_from_xml(@xml_element)
+          @expected_element = MXSpecObject.load_from_xml(@xml_element)
         end
 
         it 'parses a String' do
-          elem = ParseXMLSpecElement.parse_xml(@xml_string)
-          expect(elem).to eq(@expected_element)
+          obj = MXSpecObject.parse_xml(@xml_string)
+          expect(obj).to eq(@expected_element)
         end
 
         it 'parses a REXML::Document' do
-          elem = ParseXMLSpecElement.parse_xml(@xml_document)
-          expect(elem).to eq(@expected_element)
+          obj = MXSpecObject.parse_xml(@xml_document)
+          expect(obj).to eq(@expected_element)
         end
 
         it 'parses a REXML::Element' do
-          elem = ParseXMLSpecElement.parse_xml(@xml_element)
-          expect(elem).to eq(@expected_element)
+          obj = MXSpecObject.parse_xml(@xml_element)
+          expect(obj).to eq(@expected_element)
         end
 
         it 'parses an IO' do
           xml_io = StringIO.new(@xml_string)
-          elem = ParseXMLSpecElement.parse_xml(xml_io)
-          expect(elem).to eq(@expected_element)
+          obj = MXSpecObject.parse_xml(xml_io)
+          expect(obj).to eq(@expected_element)
         end
 
         it 'parses a file' do
@@ -80,8 +118,8 @@ module XML
           begin
             xml_file.write(@xml_string)
             xml_file.rewind
-            elem = ParseXMLSpecElement.parse_xml(xml_file)
-            expect(elem).to eq(@expected_element)
+            obj = MXSpecObject.parse_xml(xml_file)
+            expect(obj).to eq(@expected_element)
           ensure
             xml_file.close(true)
           end

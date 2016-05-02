@@ -1,3 +1,9 @@
+## 0.3.6 (2 May 2016)
+
+- Added `XML::MappingExtensions::Namespace`, with corresponding extension module
+  `XML::MappingExtensions::NamespacedElement`, to support more or less proper XML namespace
+  URLs and prefixing
+
 ## 0.3.5 (28 April 2016)
 
 - `DateNode`: Fix issues with `Date.xmlschema` misbehaving in a Rails / ActiveSupport environment

@@ -153,12 +153,7 @@ elem.time = Time.utc(2000, 1, 1, 2, 34, 56)
 elem.uri = URI('http://example.org')
 elem.mime_type = MIME::Types['text/plain'].first
 
-xml = elem.save_to_xml
-
-formatter = REXML::Formatters::Pretty.new
-formatter.compact = true
-
-puts(formatter.write(xml, ""))
+puts(elem.write_xml)
 ```
 
 Outputs:
@@ -171,4 +166,53 @@ Outputs:
   <uri>http://example.org</uri>
   <mime_type>text/plain</mime_type>
 </my_elem>
+```
+
+## Namespaces
+
+The `Namespace` class encapsulates an XML namespace:
+
+```ruby
+namespace = Namespace.new(uri: 'http://example.org/px', schema_location: 'http://example.org/px.xsd')
+```
+
+Setting a namespace on a mapped object will cause that namespace to be written out when the object is saved
+to XML:
+
+```ruby
+obj = MyElem.new(...)
+obj.namespace = namespace
+
+puts obj.write_xml
+```
+
+Outputs:
+
+```xml
+<element xmlns='http://example.org/px/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://example.org/px.xsd' attribute='123'>
+  element text
+  <child>child 1</child>
+  <child>child 2</child>
+</element>
+```
+
+Setting a `prefix` attribute on the namespace will set the prefix on each element in the output:
+
+```ruby
+namespace = Namespace.new(prefix: 'px', uri: 'http://example.org/px', schema_location: 'http://example.org/px.xsd')
+
+obj = MyElem.new(...)
+obj.namespace = namespace
+
+puts obj.write_xml
+```
+
+Outputs:
+
+```xml
+<px:element xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://example.org/px.xsd' xmlns:px='http://example.org/px/' attribute='123'>
+  element text
+  <px:child>child 1</px:child>
+  <px:child>child 2</px:child>
+</px:element>
 ```
