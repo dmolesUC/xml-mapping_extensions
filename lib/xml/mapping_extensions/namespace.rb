@@ -50,7 +50,20 @@ module XML
         "Namespace(uri: #{uri}, prefix: #{prefix || 'nil'}, schema_location: #{schema_location || 'nil'}"
       end
 
-      private
+      def ==(o)
+        o.class == self.class && o.state == state
+      end
+
+      alias_method :eql?, :==
+
+      def hash
+        state.hash
+      end
+
+      def state
+        [uri, prefix, schema_location]
+      end
+      protected :state
 
       def set_prefix_recursive(elem) # rubocop:disable Style/AccessorMethodName
         return unless elem.namespace == uri
@@ -58,6 +71,7 @@ module XML
         elem.name = "#{prefix}:#{elem.name}"
         elem.each_element { |e| set_prefix_recursive(e) }
       end
+      private :set_prefix_recursive
     end
   end
 
