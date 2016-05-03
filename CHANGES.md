@@ -1,6 +1,8 @@
 ## 0.3.7 (Next)
 
-- Made `schema_location` optional.
+- Made `Namespace#schema_location` optional.
+- Added `Namespace#to_s` to improve log and debug output.
+- Added hashing and equality to `Namespace`.
 
 ## 0.3.6 (2 May 2016)
 
