@@ -12,17 +12,17 @@ module XML
       # @return [String, nil] the namespace prefix
       attr_reader :prefix
 
-      # @return [String] the schema location URI(s), as a space-separated string list
+      # @return [String, nil] the schema location URI(s), as a space-separated string list
       attr_reader :schema_location
 
       # Creates a new {Namespace}
       # @param uri [URI, String] the namespace URI
       # @param prefix [String, nil] the namespace prefix
-      # @param schema_location [String] the schema location(s)
-      def initialize(uri:, prefix: nil, schema_location:)
+      # @param schema_location [String, nil] the schema location(s)
+      def initialize(uri:, prefix: nil, schema_location: nil)
         @uri = uri.to_s
         @prefix = prefix
-        @schema_location = schema_location.to_s
+        @schema_location = schema_location
       end
 
       # Sets `uri` as the default (no-prefix) namespace on `elem`, with
@@ -30,8 +30,10 @@ module XML
       # @param elem [REXML::Element] The element to set the namespace on
       def set_default_namespace(elem) # rubocop:disable Style/AccessorMethodName
         elem.add_namespace(uri)
-        elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        elem.add_attribute('xsi:schemaLocation', schema_location)
+        if schema_location # TODO: Figure out xsi:noNamespaceSchemaLocation
+          elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+          elem.add_attribute('xsi:schemaLocation', schema_location)
+        end
       end
 
       # Sets `prefix` as the prefix for namespace `uri` on the specified document

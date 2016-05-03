@@ -1,3 +1,7 @@
+## 0.3.7 (Next)
+
+- Made `schema_location` optional.
+
 ## 0.3.6 (2 May 2016)
 
 - Added `XML::MappingExtensions::Namespace`, with corresponding extension module

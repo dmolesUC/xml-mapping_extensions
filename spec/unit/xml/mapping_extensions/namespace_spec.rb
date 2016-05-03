@@ -6,6 +6,9 @@ module XML
       describe '#set_default_namespace' do
         it 'sets the default namespace'
         it 'sets the schema location'
+        it 'allows a nil schema location'
+        it 'sets the no-namespace schema location'
+        it 'allows a nil no-namespace schema location'
       end
 
       describe '#set_prefix' do
