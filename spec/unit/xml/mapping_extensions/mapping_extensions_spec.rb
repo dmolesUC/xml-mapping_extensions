@@ -56,7 +56,6 @@ module XML
         expected = "<px:element #{namespace_attribs} attribute='123'>element text<px:child>child 1</px:child><px:child>child 2</px:child></px:element>"
 
         expect(obj.save_to_xml).to be_xml(expected)
-        puts(obj.write_xml)
       end
 
       it 'works without prefixes' do
@@ -74,7 +73,6 @@ module XML
         expected = "<element #{namespace_attribs} attribute='123'>element text<child>child 1</child><child>child 2</child></element>"
 
         expect(obj.save_to_xml).to be_xml(expected)
-        puts(obj.write_xml)
       end
     end
 
