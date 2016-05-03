@@ -46,6 +46,10 @@ module XML
         root.add_namespace(prefix, uri)
       end
 
+      def to_s
+        "Namespace(uri: #{uri}, prefix: #{prefix || 'nil'}, schema_location: #{schema_location || 'nil'}"
+      end
+
       private
 
       def set_prefix_recursive(elem) # rubocop:disable Style/AccessorMethodName
