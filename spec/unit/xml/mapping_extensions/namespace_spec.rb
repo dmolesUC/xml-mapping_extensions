@@ -62,12 +62,12 @@ module XML
         describe 'unequal objects' do
           before(:each) do
             @nss = [
-                Namespace.new(uri: 'http://example.org/px/', prefix: 'px', schema_location: 'http://example.org/px.xsd'),
-                Namespace.new(uri: 'http://example.com/px/', prefix: 'px', schema_location: 'http://example.org/px.xsd'),
-                Namespace.new(uri: 'http://example.org/px/', prefix: 'px', schema_location: 'http://example.com/px.xsd'),
-                Namespace.new(uri: 'http://example.org/px/', prefix: 'px2', schema_location: 'http://example.org/px.xsd'),
-                Namespace.new(uri: 'http://example.org/px/', schema_location: 'http://example.org/px.xsd'),
-                Namespace.new(uri: 'http://example.org/px/', prefix: 'px'),
+              Namespace.new(uri: 'http://example.org/px/', prefix: 'px', schema_location: 'http://example.org/px.xsd'),
+              Namespace.new(uri: 'http://example.com/px/', prefix: 'px', schema_location: 'http://example.org/px.xsd'),
+              Namespace.new(uri: 'http://example.org/px/', prefix: 'px', schema_location: 'http://example.com/px.xsd'),
+              Namespace.new(uri: 'http://example.org/px/', prefix: 'px2', schema_location: 'http://example.org/px.xsd'),
+              Namespace.new(uri: 'http://example.org/px/', schema_location: 'http://example.org/px.xsd'),
+              Namespace.new(uri: 'http://example.org/px/', prefix: 'px')
             ]
           end
 

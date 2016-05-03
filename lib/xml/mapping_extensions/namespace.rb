@@ -30,10 +30,10 @@ module XML
       # @param elem [REXML::Element] The element to set the namespace on
       def set_default_namespace(elem) # rubocop:disable Style/AccessorMethodName
         elem.add_namespace(uri)
-        if schema_location # TODO: Figure out xsi:noNamespaceSchemaLocation
-          elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-          elem.add_attribute('xsi:schemaLocation', schema_location)
-        end
+        return unless schema_location
+        # TODO: Figure out xsi:noNamespaceSchemaLocation
+        elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+        elem.add_attribute('xsi:schemaLocation', schema_location)
       end
 
       # Sets `prefix` as the prefix for namespace `uri` on the specified document
@@ -50,8 +50,8 @@ module XML
         "Namespace(uri: #{uri}, prefix: #{prefix || 'nil'}, schema_location: #{schema_location || 'nil'}"
       end
 
-      def ==(o)
-        o.class == self.class && o.state == state
+      def ==(other)
+        other.class == self.class && other.state == state
       end
 
       alias_method :eql?, :==
