@@ -1,4 +1,4 @@
-## 0.3.7 (Next)
+## 0.3.7 (13 May 2016)
 
 - Made `Namespace#schema_location` optional.
 - Added `Namespace#to_s` to improve log and debug output.
