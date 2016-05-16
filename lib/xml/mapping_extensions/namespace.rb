@@ -20,8 +20,8 @@ module XML
       # @param prefix [String, nil] the namespace prefix
       # @param schema_location [String, nil] the schema location(s)
       def initialize(uri:, prefix: nil, schema_location: nil)
-        @uri = uri.to_s
-        @prefix = prefix
+        @uri             = uri.to_s
+        @prefix          = prefix
         @schema_location = schema_location
       end
 
@@ -63,6 +63,7 @@ module XML
       def state
         [uri, prefix, schema_location]
       end
+
       protected :state
 
       def set_prefix_recursive(elem) # rubocop:disable Style/AccessorMethodName
@@ -71,40 +72,8 @@ module XML
         elem.name = "#{prefix}:#{elem.name}"
         elem.each_element { |e| set_prefix_recursive(e) }
       end
+
       private :set_prefix_recursive
-    end
-  end
-
-  # Extends `XML::Mapping` to add a namespace attribute and write the namespace
-  # out when saving to XML.
-  class NamespacedElement
-    include ::XML::Mapping
-
-    class << self
-      def namespace(ns = nil)
-        @namespace = ns if ns
-        @namespace
-      end
-    end
-
-    def namespace
-      self.class.namespace
-    end
-
-    # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location
-    # on the generated element.
-    def pre_save(options = { mapping: :_default })
-      xml = super(options)
-      namespace.set_default_namespace(xml) if namespace
-      xml
-    end
-
-    # Overrides `XML::Mapping#save_to_xml` to set the XML namespace prefix on
-    # the generated element, and all its descendants that have that namespace.
-    def save_to_xml(options = { mapping: :_default })
-      xml = super(options)
-      namespace.set_prefix(xml) if namespace
-      xml
     end
   end
 end
