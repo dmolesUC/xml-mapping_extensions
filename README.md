@@ -16,8 +16,8 @@ Additional mapping nodes and other utility code for working with
     - [Example](#example)
   - [Provided implementations](#provided-implementations)
     - [Example](#example-1)
-    - [Reading XML:](#reading-xml)
-    - [Writing XML:](#writing-xml)
+    - [Reading](#reading)
+    - [Writing](#writing)
 - [Namespaces](#namespaces)
 
 
@@ -123,7 +123,7 @@ class MyElem
 end
 ```
 
-#### Reading XML:
+#### Reading
 
 ```ruby
 xml_str = '<my_elem>
@@ -156,7 +156,7 @@ Outputs
 #<MIME::Type:0x007f864bdc4f78 @friendly={"en"=>"Text File"}, @system=nil, @obsolete=false, @registered=true, @use_instead=nil, @signature=false, @content_type="text/plain", @raw_media_type="text", @raw_sub_type="plain", @simplified="text/plain", @i18n_key="text.plain", @media_type="text", @sub_type="plain", @docs=[], @encoding="quoted-printable", @extensions=["txt", "asc", "c", "cc", "h", "hh", "cpp", "hpp", "dat", "hlp", "conf", "def", "doc", "in", "list", "log", "markdown", "md", "rst", "text", "textile"], @references=["IANA", "RFC2046", "RFC3676", "RFC5147"], @xrefs={"rfc"=>["rfc2046", "rfc3676", "rfc5147"]}>
 ```
 
-#### Writing XML:
+#### Writing
 
 ```ruby
 elem = MyElem.new
@@ -183,14 +183,32 @@ Outputs:
 
 ## Namespaces
 
-The `Namespace` class encapsulates an XML namespace:
+The `Namespace` class encapsulates an XML namespace. The `Namespaced` module extends `XML::Mapping` to
+add a `namespace` attribute and write the namespace out when saving to XML.
 
 ```ruby
-namespace = Namespace.new(uri: 'http://example.org/px', schema_location: 'http://example.org/px.xsd')
+class MyElem
+  include XML::MappingExtensions::Namespaced # instead of XML::Mapping
+
+  namespace Namespace.new(
+    prefix: 'px',
+    uri: 'http://example.org/px'
+  )
+
+  root_element_name 'my_elem'
+
+  date_node :plain_date, 'plain_date'
+  date_node :zulu_date, 'zulu_date', zulu: true
+  time_node :time, 'time'
+  uri_node :uri, 'uri'
+  mime_type_node :mime_type, 'mime_type'
+end
+
+MyElem.namespace
+# => #<XML::MappingExtensions::Namespace:0x007fb1c6b73e80>
 ```
 
-Setting a namespace on a mapped object will cause that namespace to be written out when the object is saved
-to XML:
+The namespace will then be written out when the object is saved to XML:
 
 ```ruby
 obj = MyElem.new(...)
@@ -198,11 +216,12 @@ obj.namespace = namespace
 
 puts obj.write_xml
 ```
-
-Outputs:
-
 ```xml
-<element xmlns='http://example.org/px/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://example.org/px.xsd' attribute='123'>
+<element
+    xmlns='http://example.org/px/'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://example.org/px.xsd'
+    attribute='123'>
   element text
   <child>child 1</child>
   <child>child 2</child>
@@ -212,18 +231,26 @@ Outputs:
 Setting a `prefix` attribute on the namespace will set the prefix on each element in the output:
 
 ```ruby
-namespace = Namespace.new(prefix: 'px', uri: 'http://example.org/px', schema_location: 'http://example.org/px.xsd')
+
+class MyElem
+  namespace Namespace.new(
+    prefix: 'px',
+    uri: 'http://example.org/px',
+    schema_location: 'http://example.org/px.xsd'
+  )
+end
 
 obj = MyElem.new(...)
 obj.namespace = namespace
 
 puts obj.write_xml
 ```
-
-Outputs:
-
 ```xml
-<px:element xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://example.org/px.xsd' xmlns:px='http://example.org/px/' attribute='123'>
+<px:element
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://example.org/px.xsd'
+    xmlns:px='http://example.org/px/'
+    attribute='123'>
   element text
   <px:child>child 1</px:child>
   <px:child>child 2</px:child>
