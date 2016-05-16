@@ -10,14 +10,16 @@ module XML
 
     # TODO: both versions with schema location
 
-    class Unprefixed < Namespaced
+    class Unprefixed
+      include Namespaced
       namespace UNPREFIXED
       root_element_name 'unprefixed'
       text_node :attr, '@attr'
       text_node :text, 'text()'
     end
 
-    class Prefixed < Namespaced
+    class Prefixed
+      include Namespaced
       namespace PREFIXED
       root_element_name 'prefixed'
       text_node :attr, '@attr'

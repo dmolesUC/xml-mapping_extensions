@@ -4,25 +4,26 @@ module XML
   module MappingExtensions
     # Extends `XML::Mapping` to add a namespace attribute and write the namespace
     # out when saving to XML.
-    class Namespaced
+    module Namespaced
 
-      class << self
+      def self.included(base)
+        base.extend(ClassMethods)
+        base.include(::XML::Mapping)
+        base.include(InstanceMethods)
+      end
+
+      module ClassMethods
         def namespace(ns = nil)
           @namespace = ns if ns
           @namespace
         end
       end
 
-      def namespace
-        self.class.namespace
-      end
+      module InstanceMethods
+        def namespace
+          self.class.namespace
+        end
 
-      def self.inherited(base)
-        base.send(:include, ::XML::Mapping)
-        base.send(:include, Injectors)
-      end
-
-      module Injectors
         # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location
         # on the generated element.
         def pre_save(options = {mapping: :_default})
