@@ -1,3 +1,7 @@
+## 0.3.8 (16 May 2016)
+
+- Fixed various issues with `NamespacedElement` and added documentation
+
 ## 0.3.7 (13 May 2016)
 
 - Made `Namespace#schema_location` optional.

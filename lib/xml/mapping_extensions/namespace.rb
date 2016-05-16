@@ -75,12 +75,21 @@ module XML
     end
   end
 
-  # Patches `XML::Mapping` to add a namespace attribute and write the namespace
+  # Extends `XML::Mapping` to add a namespace attribute and write the namespace
   # out when saving to XML.
-  module NamespacedElement
+  class NamespacedElement
+    include ::XML::Mapping
 
-    # @return [Namespace, nil] the namespace, if any
-    attr_accessor :namespace
+    class << self
+      def namespace(ns = nil)
+        @namespace = ns if ns
+        @namespace
+      end
+    end
+
+    def namespace
+      self.class.namespace
+    end
 
     # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location
     # on the generated element.
@@ -97,9 +106,5 @@ module XML
       namespace.set_prefix(xml) if namespace
       xml
     end
-  end
-
-  module Mapping
-    prepend NamespacedElement
   end
 end
