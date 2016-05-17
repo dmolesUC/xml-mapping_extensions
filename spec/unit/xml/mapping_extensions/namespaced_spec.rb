@@ -9,6 +9,7 @@ module XML
     PREFIXED      = Namespace.new(uri: 'http://example.org/nse', prefix: 'px')
     UNPREFIXED_SL = Namespace.new(uri: 'http://example.org/nse', schema_location: 'http://example.org/nse.xsd')
     PREFIXED_SL   = Namespace.new(uri: 'http://example.org/nse', schema_location: 'http://example.org/nse.xsd', prefix: 'px')
+    PREFIXED_SL2  = Namespace.new(uri: 'http://example.org/nse2', schema_location: 'http://example.org/nse2.xsd', prefix: 'px2')
 
     # TODO: both versions with schema location
 
@@ -44,7 +45,45 @@ module XML
       text_node :text, 'text()'
     end
 
+    class Inner
+      include Namespaced
+      namespace PREFIXED_SL2
+      text_node :text, 'text()'
+
+      def initialize(text_val)
+        self.text = text_val
+      end
+    end
+
+    class Outer
+      include Namespaced
+      namespace PREFIXED_SL
+      root_element_name 'outer'
+      array_node :inners, 'inners', 'inner', class: Inner, default_value: []
+    end
+
     describe Namespaced do
+
+      describe 'nested' do
+        it 'writes XML' do
+          obj        = Outer.new
+          obj.inners = [Inner.new('1'), Inner.new('2')]
+          expected   = '
+            <px:outer
+              xmlns:px="http://example.org/nse"
+              xmlns:px2="http://example.org/nse2"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://example.org/nse http://example.org/nse.xsd http://example.org/nse2 http://example.org/nse2.xsd">
+              <px:inners>
+                <px2:inner>1</px2:inner>
+                <px2:inner>2</px2:inner>
+              </px:inners>
+            </px:outer>'
+          expect(obj.write_xml).to be_xml(expected)
+        end
+        it 'parses XML'
+      end
+
       describe 'without schema location' do
         describe '#save_to_xml' do
           it 'writes XML with a default namespace' do
@@ -77,6 +116,7 @@ module XML
           end
         end
       end
+
       describe 'with schema location' do
         describe '#save_to_xml' do
           it 'writes XML with a default namespace' do
