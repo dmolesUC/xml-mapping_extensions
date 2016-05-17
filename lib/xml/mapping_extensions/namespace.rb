@@ -31,9 +31,9 @@ module XML
       def set_default_namespace(elem) # rubocop:disable Style/AccessorMethodName
         elem.add_namespace(uri)
         return unless schema_location
-        # TODO: Figure out xsi:noNamespaceSchemaLocation
+        set_schema_location(elem)
         elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        elem.add_attribute('xsi:schemaLocation', schema_location)
+        elem
       end
 
       # Sets `prefix` as the prefix for namespace `uri` on the specified document
@@ -60,11 +60,13 @@ module XML
         state.hash
       end
 
+      protected
+
       def state
         [uri, prefix, schema_location]
       end
 
-      protected :state
+      private
 
       def set_prefix_recursive(elem) # rubocop:disable Style/AccessorMethodName
         return unless elem.namespace == uri
@@ -73,7 +75,13 @@ module XML
         elem.each_element { |e| set_prefix_recursive(e) }
       end
 
-      private :set_prefix_recursive
+      def set_schema_location(elem) # rubocop:disable Style/AccessorMethodName
+        return unless schema_location
+        existing = elem.attribute('xsi:schemaLocation')
+        schema_locations = existing ? existing.value : ''
+        schema_locations << " #{uri} #{schema_location}"
+        elem.add_attribute('xsi:schemaLocation', schema_locations.strip)
+      end
     end
   end
 end

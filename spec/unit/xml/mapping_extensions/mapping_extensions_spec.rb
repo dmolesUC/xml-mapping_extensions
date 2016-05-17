@@ -40,44 +40,6 @@ module XML
       end
     end
 
-    describe ':namespace' do
-      it 'sets the namespace on save' do
-        uri = 'http://example.org/px/'
-        schema_location = 'http://example.org/px.xsd'
-
-        MXSpecObject.send(:include, MappingExtensions::Namespaced)
-        MXSpecObject.namespace(MappingExtensions::Namespace.new(uri: uri, prefix: 'px', schema_location: schema_location))
-
-        obj = MXSpecObject.new
-        obj.attribute = 123
-        obj.text = 'element text'
-        obj.children = ['child 1', 'child 2']
-
-        namespace_attribs = "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='#{schema_location}' xmlns:px='#{uri}'"
-        expected = "<px:element #{namespace_attribs} attribute='123'>element text<px:child>child 1</px:child><px:child>child 2</px:child></px:element>"
-
-        expect(obj.save_to_xml).to be_xml(expected)
-      end
-
-      it 'works without prefixes' do
-        uri = 'http://example.org/px/'
-        schema_location = 'http://example.org/px.xsd'
-
-        MXSpecObject.send(:include, MappingExtensions::Namespaced)
-        MXSpecObject.namespace(MappingExtensions::Namespace.new(uri: uri, schema_location: schema_location))
-
-        obj = MXSpecObject.new
-        obj.attribute = 123
-        obj.text = 'element text'
-        obj.children = ['child 1', 'child 2']
-
-        namespace_attribs = "xmlns='#{uri}' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='#{schema_location}'"
-        expected = "<element #{namespace_attribs} attribute='123'>element text<child>child 1</child><child>child 2</child></element>"
-
-        expect(obj.save_to_xml).to be_xml(expected)
-      end
-    end
-
     module ClassMethods
       describe '#parse_xml' do
 
