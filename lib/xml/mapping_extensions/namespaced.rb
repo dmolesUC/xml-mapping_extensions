@@ -50,10 +50,30 @@ module XML
         private
 
         def add_namespace(elem)
-          return elem unless namespace
+          return unless namespace
           prefix, uri, schema_location = namespace.prefix, namespace.uri, namespace.schema_location # rubocop:disable Style/ParallelAssignment
-          elem.add_attribute('xsi:schemaLocation', "#{uri} #{schema_location}") if schema_location
-          prefix ? elem.add_namespace(prefix, uri) : elem.add_namespace(uri)
+          root = add_schema_location(uri, schema_location, elem.root)
+          if prefix
+            root.add_namespace(prefix, uri)
+              # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
+              elem.name = "#{prefix}:#{elem.name}"
+          else
+            root.add_namespace(uri)
+          end
+        end
+
+        def add_schema_location(uri, schema_location, elem)
+          return elem unless schema_location
+
+          schema_location_attr = elem.attribute('xsi:schemaLocation')
+          all_declarations = schema_location_attr ? schema_location_attr.value : ''
+
+          declaration = "#{uri} #{schema_location}"
+          return elem if all_declarations.include?(declaration)
+
+          all_declarations << " #{declaration}"
+          elem.add_attribute('xsi:schemaLocation', all_declarations.strip)
+          elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         end
 
       end
