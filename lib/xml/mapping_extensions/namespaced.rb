@@ -31,13 +31,16 @@ module XML
         def fill_into_xml(xml, options = { mapping: :_default })
           add_namespace(xml)
           super(xml, options)
+          return unless namespace
           set_prefix_recursive(namespace.prefix, xml)
         end
 
         private
 
         def set_prefix_recursive(prefix, elem)
-          return unless prefix
+          return elem unless prefix
+          return elem unless elem.namespace == namespace.uri || elem.namespace.to_s.empty?
+
           set_prefix(prefix, elem)
           elem.each_element { |e| set_prefix_recursive(prefix, e) }
           elem
@@ -46,12 +49,13 @@ module XML
         def add_namespace(elem)
           return unless namespace
           prefix, uri, schema_location = namespace.prefix, namespace.uri, namespace.schema_location # rubocop:disable Style/ParallelAssignment
-          root                         = add_schema_location(uri, schema_location, elem.root)
           if prefix
             set_prefix(prefix, elem)
-            root.add_namespace(prefix, uri)
+            add_schema_location(uri, schema_location, elem.root)
+            elem.root.add_namespace(prefix, uri)
           else
-            root.add_namespace(uri)
+            add_schema_location(uri, schema_location, elem)
+            elem.add_namespace(uri)
           end
         end
 
@@ -72,7 +76,7 @@ module XML
           all_declarations << " #{declaration}"
           elem.add_attribute('xsi:schemaLocation', all_declarations.strip)
 
-          elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+          elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance') unless elem.root && elem.root.attribute('xmlns:xsi')
         end
 
       end

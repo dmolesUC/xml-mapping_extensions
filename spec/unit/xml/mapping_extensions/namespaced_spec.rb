@@ -9,6 +9,7 @@ module XML
     PREFIXED      = Namespace.new(uri: 'http://example.org/nse', prefix: 'px')
     UNPREFIXED_SL = Namespace.new(uri: 'http://example.org/nse', schema_location: 'http://example.org/nse.xsd')
     PREFIXED_SL   = Namespace.new(uri: 'http://example.org/nse', schema_location: 'http://example.org/nse.xsd', prefix: 'px')
+    PREFIXED_SL1  = Namespace.new(uri: 'http://example.org/nse1', schema_location: 'http://example.org/nse1.xsd', prefix: 'px1')
     PREFIXED_SL2  = Namespace.new(uri: 'http://example.org/nse2', schema_location: 'http://example.org/nse2.xsd', prefix: 'px2')
     PREFIXED_SL3  = Namespace.new(uri: 'http://example.org/nse3', schema_location: 'http://example.org/nse3.xsd', prefix: 'px3')
 
@@ -36,6 +37,11 @@ module XML
       root_element_name 'unprefixed'
       text_node :attr, '@attr'
       text_node :text, 'text()'
+
+      def initialize(attr = nil, text = nil)
+        self.attr = attr
+        self.text = text
+      end
     end
 
     class PrefixedSL
@@ -49,10 +55,12 @@ module XML
     class Innermost
       include Namespaced
       namespace PREFIXED_SL3
+      object_node :unprefixed, 'unprefixed', class: UnprefixedSL, default_value: nil
       text_node :text, 'text()'
 
-      def initialize(text_val)
-        self.text = text_val
+      def initialize(text_val, unprefixed = nil)
+        self.text       = text_val
+        self.unprefixed = unprefixed
       end
     end
 
@@ -72,7 +80,7 @@ module XML
 
     class Outer
       include Namespaced
-      namespace PREFIXED_SL
+      namespace PREFIXED_SL1
       root_element_name 'outer'
       text_node :nested, 'nested'
       array_node :inners, 'inner', class: Inner, default_value: []
@@ -89,35 +97,38 @@ module XML
         it 'writes XML' do
           obj      = Outer.new('nested',
                                [Inner.new('1', 'a', Innermost.new('1')),
-                                Inner.new('2', 'b', Innermost.new('2'))])
+                                Inner.new('2', 'b', Innermost.new('2', UnprefixedSL.new('attr', 'text')))])
           expected = '
-            <px:outer
-                xmlns:px="http://example.org/nse"
+            <px1:outer
+                xmlns:px1="http://example.org/nse1"
                 xmlns:px2="http://example.org/nse2"
                 xmlns:px3="http://example.org/nse3"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://example.org/nse http://example.org/nse.xsd http://example.org/nse2 http://example.org/nse2.xsd http://example.org/nse3 http://example.org/nse3.xsd">
-              <px:nested>nested</px:nested>
+                xsi:schemaLocation="http://example.org/nse1 http://example.org/nse1.xsd http://example.org/nse2 http://example.org/nse2.xsd http://example.org/nse3 http://example.org/nse3.xsd">
+              <px1:nested>nested</px1:nested>
               <px2:inner attr="1">
                 <px2:subnested>a</px2:subnested>
                 <px3:innermost>1</px3:innermost>
               </px2:inner>
               <px2:inner attr="2">
                 <px2:subnested>b</px2:subnested>
-                <px3:innermost>2</px3:innermost>
+                <px3:innermost>
+                  <unprefixed xmlns="http://example.org/nse" xsi:schemaLocation="http://example.org/nse http://example.org/nse.xsd" attr="attr">text</unprefixed>
+                  2
+                </px3:innermost>
               </px2:inner>
-            </px:outer>'
+            </px1:outer>'
           expect(obj.write_xml).to be_xml(expected)
         end
 
         it 'parses XML' do
-          xml    = '<px:outer
-                    xmlns:px="http://example.org/nse"
+          xml    = '<px1:outer
+                    xmlns:px1="http://example.org/nse1"
                     xmlns:px2="http://example.org/nse2"
                     xmlns:px3="http://example.org/nse3"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://example.org/nse http://example.org/nse.xsd http://example.org/nse2 http://example.org/nse2.xsd http://example.org/nse3 http://example.org/nse3.xsd">
-                  <px:nested>nested</px:nested>
+                    xsi:schemaLocation="http://example.org/nse1 http://example.org/nse1.xsd http://example.org/nse2 http://example.org/nse2.xsd http://example.org/nse3 http://example.org/nse3.xsd">
+                  <px1:nested>nested</px1:nested>
                   <px2:inner attr="1">
                     <px2:subnested>a</px2:subnested>
                     <px3:innermost>1</px3:innermost>
@@ -126,7 +137,7 @@ module XML
                     <px2:subnested>b</px2:subnested>
                     <px3:innermost>2</px3:innermost>
                   </px2:inner>
-                </px:outer>'
+                </px1:outer>'
           result = Outer.parse_xml(xml)
           expect(result).to be_an(Outer)
           expect(result.nested).to eq('nested')
