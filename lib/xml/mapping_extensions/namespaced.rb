@@ -71,6 +71,7 @@ module XML
 
           all_declarations << " #{declaration}"
           elem.add_attribute('xsi:schemaLocation', all_declarations.strip)
+
           elem.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         end
 

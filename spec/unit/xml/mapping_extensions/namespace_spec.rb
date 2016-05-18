@@ -3,20 +3,6 @@ require 'spec_helper'
 module XML
   module MappingExtensions
     describe Namespace do
-      describe '#set_default_namespace' do
-        it 'sets the default namespace'
-        it 'sets the schema location'
-        it 'allows a nil schema location'
-        it 'sets the no-namespace schema location'
-        it 'allows a nil no-namespace schema location'
-      end
-
-      describe '#set_prefix' do
-        it 'sets the prefix'
-        it 'clears the no-prefix namespace, if previously present'
-        it 'leaves an unrelated no-prefix namespace intact'
-      end
-
       describe '#to_s' do
         it 'includes the prefix, namespace, and schema location' do
           uri             = 'http://example.org/px/'
@@ -38,6 +24,16 @@ module XML
           prefix    = 'px'
           namespace = Namespace.new(uri: uri, prefix: prefix)
           expect(namespace.to_s).to match(/Namespace.*#{uri}.*#{prefix}.*nil/)
+        end
+
+        it 'rejects a nil uri' do
+          expect { Namespace.new(uri: nil) }.to raise_error(URI::InvalidURIError)
+        end
+        it 'rejects an invalid uri' do
+          expect { Namespace.new(uri: 'I am not a URI') }.to raise_error(URI::InvalidURIError)
+        end
+        it 'rejects an invalid schema_location' do
+          expect { Namespace.new(uri: 'http://example.org/px/', schema_location: 'I am not a URI') }.to raise_error(URI::InvalidURIError)
         end
       end
 

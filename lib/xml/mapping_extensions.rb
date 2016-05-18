@@ -6,6 +6,30 @@ module XML
   # [XML::Mapping](http://multi-io.github.io/xml-mapping/)
   module MappingExtensions
     Dir.glob(File.expand_path('../mapping_extensions/*.rb', __FILE__), &method(:require))
+
+    # Ensures that the specified argument is a URI.
+    # @param url [String, URI] The argument. If the argument is already
+    #   a URI, it is returned unchanged; otherwise, the argument's string
+    #   form (as returned by +`to_s`+) is parsed as a URI.
+    # @return [nil, URI] +`nil`+ if +`url`+ is nil, otherwise the URI.
+    # @raise [URI::InvalidURIError] if `url` is a string that is not a valid URI
+    def self.to_uri(url)
+      return nil unless url
+      return url if url.is_a? URI
+      stripped = url.respond_to?(:strip) ? url.strip : url.to_s.strip
+      URI.parse(stripped)
+    end
+
+    # Ensures that the specified argument is a URI string.
+    # @param url [String, URI] The argument. If the argument is already
+    #   a URI, it is returned unchanged; otherwise, the argument's string
+    #   form (as returned by +`to_s`+) is parsed as a URI.
+    # @return [nil, String] +`nil`+ if +`url`+ is nil, otherwise the URI string.
+    # @raise [URI::InvalidURIError] if `url` is a string that is not a valid URI
+    def self.to_uri_str(url)
+      uri = to_uri(url)
+      uri && uri.to_s
+    end
   end
 
   module Mapping
