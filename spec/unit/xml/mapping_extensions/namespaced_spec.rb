@@ -109,7 +109,41 @@ module XML
             </px:outer>'
           expect(obj.write_xml).to be_xml(expected)
         end
-        it 'parses XML'
+
+        it 'parses XML' do
+          xml    = '<px:outer
+                    xmlns:px="http://example.org/nse"
+                    xmlns:px2="http://example.org/nse2"
+                    xmlns:px3="http://example.org/nse3"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://example.org/nse http://example.org/nse.xsd http://example.org/nse2 http://example.org/nse2.xsd http://example.org/nse3 http://example.org/nse3.xsd">
+                  <px:nested>nested</px:nested>
+                  <px2:inner attr="1">
+                    <px2:subnested>a</px2:subnested>
+                    <px3:innermost>1</px3:innermost>
+                  </px2:inner>
+                  <px2:inner attr="2">
+                    <px2:subnested>b</px2:subnested>
+                    <px3:innermost>2</px3:innermost>
+                  </px2:inner>
+                </px:outer>'
+          result = Outer.parse_xml(xml)
+          expect(result).to be_an(Outer)
+          expect(result.nested).to eq('nested')
+          inners = result.inners
+          expect(inners).to be_an(Array)
+          expect(inners.size).to eq(2)
+          expect(inners[0].attr).to eq('1')
+          expect(inners[1].attr).to eq('2')
+          expect(inners[0].subnested).to eq('a')
+          expect(inners[1].subnested).to eq('b')
+          innermost1 = inners[0].innermost
+          expect(innermost1).to be_an(Innermost)
+          expect(innermost1.text).to eq('1')
+          innermost2 = inners[1].innermost
+          expect(innermost2).to be_an(Innermost)
+          expect(innermost2.text).to eq('2')
+        end
       end
 
       describe 'without schema location' do
