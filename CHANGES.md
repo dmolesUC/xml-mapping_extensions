@@ -1,3 +1,7 @@
+## 0.4.1 (18 May 2016)
+
+- Fixed various issues with nested namespaces
+
 ## 0.4.0 (16 May 2016)
 
 - Renamed `NamespacedElement` to `Namespaced` and made it an explicit include rather than auto-injected
