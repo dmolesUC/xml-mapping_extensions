@@ -26,47 +26,45 @@ module XML
       # Hack to make sure these don't get defined till after `XML::Mapping`'s include
       # hooks have a chance to define their super methods
       module InstanceMethods
-        # Overrides `XML::Mapping#post_save` to clean up prefixes and add schema locations
-        def post_save(xml, options = {mapping: :_default})
-          puts "#{self.class}.pre_save()"
-          super(xml, options)
-        end
-
-        # Overrides `XML::Mapping#save_to_xml` to set the XML namespace prefix on
-        # the generated element, and all its descendants that have that namespace.
-        def save_to_xml(options = {mapping: :_default})
-          super(options)
-          # xml = super(options)
-          # namespace.set_prefix(xml) if namespace
-          # xml
-        end
 
         # Overrides `XML::Mapping#fill_into_xml` to set the XML namespace
-        def fill_into_xml(xml, options={mapping: :_default})
+        def fill_into_xml(xml, options = { mapping: :_default })
           add_namespace(xml)
           super(xml, options)
+          set_prefix_recursive(namespace.prefix, xml)
         end
 
         private
 
+        def set_prefix_recursive(prefix, elem)
+          return unless prefix
+          set_prefix(prefix, elem)
+          elem.each_element { |e| set_prefix_recursive(prefix, e) }
+          elem
+        end
+
         def add_namespace(elem)
           return unless namespace
           prefix, uri, schema_location = namespace.prefix, namespace.uri, namespace.schema_location # rubocop:disable Style/ParallelAssignment
-          root = add_schema_location(uri, schema_location, elem.root)
+          root                         = add_schema_location(uri, schema_location, elem.root)
           if prefix
+            set_prefix(prefix, elem)
             root.add_namespace(prefix, uri)
-              # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
-              elem.name = "#{prefix}:#{elem.name}"
           else
             root.add_namespace(uri)
           end
+        end
+
+        def set_prefix(prefix, elem)
+          # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
+          elem.name = "#{prefix}:#{elem.name}" if elem.prefix.to_s.empty?
         end
 
         def add_schema_location(uri, schema_location, elem)
           return elem unless schema_location
 
           schema_location_attr = elem.attribute('xsi:schemaLocation')
-          all_declarations = schema_location_attr ? schema_location_attr.value : ''
+          all_declarations     = schema_location_attr ? schema_location_attr.value : ''
 
           declaration = "#{uri} #{schema_location}"
           return elem if all_declarations.include?(declaration)
