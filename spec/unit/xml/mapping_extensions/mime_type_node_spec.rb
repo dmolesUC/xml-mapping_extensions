@@ -47,6 +47,11 @@ module XML
         expect { to_mime_type(mt_str) }.to raise_error(MIME::Type::InvalidContentType)
       end
 
+      it 'parses a nil mime-type as nil' do
+        elem = MimeTypeSpecElem.parse_xml('<elem/>')
+        expect(elem.mime_type).to be_nil
+      end
+
     end
   end
 end
