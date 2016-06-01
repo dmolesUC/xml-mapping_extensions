@@ -1,3 +1,7 @@
+## 0.4.2 (1 June 2016)
+
+- Made `DateNode` truncate a `DateTime` to a date
+
 ## 0.4.1 (18 May 2016)
 
 - Fixed various issues with nested namespaces

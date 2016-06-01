@@ -13,8 +13,8 @@ module XML
         load_from_xml(doc.root)
       end
     end
-    describe DateNode do
 
+    describe DateNode do
       def to_date(str)
         DateNodeSpecElem.from_str(str).date
       end
@@ -57,9 +57,33 @@ module XML
         expect(actual).to eq(expected)
       end
 
+      it 'truncates a Time to a date' do
+        expected = '2002-09-24'
+        actual = to_text(Time.utc(2002, 9, 24, 0, 1, 2))
+        expect(actual).to eq(expected)
+      end
+
+      it 'truncates a DateTime to a Date' do
+        expected = '2002-09-24'
+        actual = to_text(DateTime.new(2002, 9, 24, 0, 1, 2))
+        expect(actual).to eq(expected)
+      end
+
       it 'outputs a UTC "zulu" date (time zone designator "Z")' do
         expected = '2002-09-24Z'
         actual = to_zulu_text(Date.new(2002, 9, 24))
+        expect(actual).to eq(expected)
+      end
+
+      it 'truncates a DateTime to a zulu date' do
+        expected = '2002-09-24Z'
+        actual = to_zulu_text(DateTime.new(2002, 9, 24, 0, 1, 2))
+        expect(actual).to eq(expected)
+      end
+
+      it 'truncates a Time to a zulu date' do
+        expected = '2002-09-24Z'
+        actual = to_zulu_text(Time.utc(2002, 9, 24, 0, 1, 2))
         expect(actual).to eq(expected)
       end
 
