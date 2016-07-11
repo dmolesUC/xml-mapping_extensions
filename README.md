@@ -68,6 +68,14 @@ elem = MyXMLClass.load_from_xml(my_xml_element)
 end
 ```
 
+Both `write_xml` and `parse_xml` accept an `options` hash, to be passed on to `save_to_xml` or `load_from_xml`,
+respectively:
+
+```
+elem = MyXMLClass.parse(my_xml_string, { mapping: :alternate })
+new_xml_string = elem.write_xml({ mapping: :alternate })
+```
+
 ## Custom nodes
 
 To create a custom node type, require `xml/mapping_extensions` and extend one of

@@ -53,7 +53,7 @@ module XML
       # `xml`, which can be a string, REXML document, or REXML element
       # @param xml [String, REXML::Document, REXML::Element]
       # @return [Object] an instance of this class.
-      def parse_xml(xml)
+      def parse_xml(xml, options = { mapping: :_default })
         element = case xml
                   when REXML::Document
                     xml.root
@@ -63,7 +63,7 @@ module XML
                     fail ArgumentError, "Unexpected argument type; expected XML document, String, or IO source, was #{xml.class}" unless can_parse(xml)
                     REXML::Document.new(xml).root
                   end
-        load_from_xml(element)
+        load_from_xml(element, options)
       end
 
       private

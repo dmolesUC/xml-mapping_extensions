@@ -13,6 +13,9 @@ module XML
       text_node :text, 'text()'
       array_node :children, 'child', class: String
 
+      use_mapping :alternate
+      text_node :text_alt, 'text()'
+
       def <=>(other)
         return nil unless self.class == other.class
         [:attribute, :text, :children].each do |p|
@@ -35,6 +38,17 @@ module XML
         obj.children = ['child 1', 'child 2']
         expected_xml = obj.save_to_xml
         xml_string = obj.write_xml
+        expect(xml_string).to be_a(String)
+        expect(xml_string).to be_xml(expected_xml)
+      end
+
+      it 'accepts an alternate mapping' do
+        obj = MXSpecObject.new
+        obj.attribute = 123
+        obj.text_alt = 'element text'
+        obj.children = ['child 1', 'child 2']
+        expected_xml = obj.save_to_xml(mapping: :alternate)
+        xml_string = obj.write_xml(mapping: :alternate)
         expect(xml_string).to be_a(String)
         expect(xml_string).to be_xml(expected_xml)
       end
@@ -85,6 +99,12 @@ module XML
           ensure
             xml_file.close(true)
           end
+        end
+
+        it 'accepts an alternate mapping' do
+          @expected_element = MXSpecObject.load_from_xml(@xml_element, mapping: :alternate)
+          obj = MXSpecObject.parse_xml(@xml_element, mapping: :alternate)
+          expect(obj).to eq(@expected_element)
         end
       end
     end
