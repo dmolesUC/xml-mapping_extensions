@@ -14,7 +14,15 @@ module XML
       array_node :children, 'child', class: String
 
       use_mapping :alternate
-      text_node :text_alt, 'text()'
+      array_node :children, 'children',
+                 reader: (proc do |obj, xml|
+                   children_elem = xml.elements['children']
+                   obj.children = children_elem ? children_elem.text.split(',') : []
+                 end),
+                 writer: (proc do |obj, xml|
+                   children_text = obj.children.join(',') if obj.children && !obj.children.empty?
+                   xml.add_element('children').text = children_text if children_text
+                 end)
 
       def <=>(other)
         return nil unless self.class == other.class
@@ -45,12 +53,11 @@ module XML
       it 'accepts an alternate mapping' do
         obj = MXSpecObject.new
         obj.attribute = 123
-        obj.text_alt = 'element text'
         obj.children = ['child 1', 'child 2']
-        expected_xml = obj.save_to_xml(mapping: :alternate)
+        saved_xml = obj.save_to_xml(mapping: :alternate)
         xml_string = obj.write_xml(mapping: :alternate)
         expect(xml_string).to be_a(String)
-        expect(xml_string).to be_xml(expected_xml)
+        expect(xml_string).to be_xml(saved_xml)
       end
     end
 
@@ -90,7 +97,7 @@ module XML
         end
 
         it 'parses a file' do
-          xml_file = Tempfile.new(%w(parse_xml_spec .xml))
+          xml_file = Tempfile.new(%w(parse_xml_spec.xml))
           begin
             xml_file.write(@xml_string)
             xml_file.rewind
@@ -102,6 +109,13 @@ module XML
         end
 
         it 'accepts an alternate mapping' do
+          @xml_string = '<element attribute="123">
+                           element text
+                           <children>child 1,child 2</children>
+                         </element>'
+          @xml_document = REXML::Document.new(@xml_string)
+          @xml_element = @xml_document.root
+
           @expected_element = MXSpecObject.load_from_xml(@xml_element, mapping: :alternate)
           obj = MXSpecObject.parse_xml(@xml_element, mapping: :alternate)
           expect(obj).to eq(@expected_element)
