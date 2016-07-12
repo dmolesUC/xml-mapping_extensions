@@ -61,65 +61,63 @@ module XML
       end
     end
 
-    module ClassMethods
-      describe '#parse_xml' do
+    describe '#parse_xml' do
 
-        before(:each) do
-          @xml_string = '<element attribute="123">
+      before(:each) do
+        @xml_string = '<element attribute="123">
                            element text
                            <child>child 1</child>
                            <child>child 2</child>
                          </element>'
-          @xml_document = REXML::Document.new(@xml_string)
-          @xml_element = @xml_document.root
-          @expected_element = MXSpecObject.load_from_xml(@xml_element)
-        end
+        @xml_document = REXML::Document.new(@xml_string)
+        @xml_element = @xml_document.root
+        @expected_element = MXSpecObject.load_from_xml(@xml_element)
+      end
 
-        it 'parses a String' do
-          obj = MXSpecObject.parse_xml(@xml_string)
+      it 'parses a String' do
+        obj = MXSpecObject.parse_xml(@xml_string)
+        expect(obj).to eq(@expected_element)
+      end
+
+      it 'parses a REXML::Document' do
+        obj = MXSpecObject.parse_xml(@xml_document)
+        expect(obj).to eq(@expected_element)
+      end
+
+      it 'parses a REXML::Element' do
+        obj = MXSpecObject.parse_xml(@xml_element)
+        expect(obj).to eq(@expected_element)
+      end
+
+      it 'parses an IO' do
+        xml_io = StringIO.new(@xml_string)
+        obj = MXSpecObject.parse_xml(xml_io)
+        expect(obj).to eq(@expected_element)
+      end
+
+      it 'parses a file' do
+        xml_file = Tempfile.new(%w(parse_xml_spec.xml))
+        begin
+          xml_file.write(@xml_string)
+          xml_file.rewind
+          obj = MXSpecObject.parse_xml(xml_file)
           expect(obj).to eq(@expected_element)
+        ensure
+          xml_file.close(true)
         end
+      end
 
-        it 'parses a REXML::Document' do
-          obj = MXSpecObject.parse_xml(@xml_document)
-          expect(obj).to eq(@expected_element)
-        end
-
-        it 'parses a REXML::Element' do
-          obj = MXSpecObject.parse_xml(@xml_element)
-          expect(obj).to eq(@expected_element)
-        end
-
-        it 'parses an IO' do
-          xml_io = StringIO.new(@xml_string)
-          obj = MXSpecObject.parse_xml(xml_io)
-          expect(obj).to eq(@expected_element)
-        end
-
-        it 'parses a file' do
-          xml_file = Tempfile.new(%w(parse_xml_spec.xml))
-          begin
-            xml_file.write(@xml_string)
-            xml_file.rewind
-            obj = MXSpecObject.parse_xml(xml_file)
-            expect(obj).to eq(@expected_element)
-          ensure
-            xml_file.close(true)
-          end
-        end
-
-        it 'accepts an alternate mapping' do
-          @xml_string = '<element attribute="123">
+      it 'accepts an alternate mapping' do
+        @xml_string = '<element attribute="123">
                            element text
                            <children>child 1,child 2</children>
                          </element>'
-          @xml_document = REXML::Document.new(@xml_string)
-          @xml_element = @xml_document.root
+        @xml_document = REXML::Document.new(@xml_string)
+        @xml_element = @xml_document.root
 
-          @expected_element = MXSpecObject.load_from_xml(@xml_element, mapping: :alternate)
-          obj = MXSpecObject.parse_xml(@xml_element, mapping: :alternate)
-          expect(obj).to eq(@expected_element)
-        end
+        @expected_element = MXSpecObject.load_from_xml(@xml_element, mapping: :alternate)
+        obj = MXSpecObject.parse_xml(@xml_element, mapping: :alternate)
+        expect(obj).to eq(@expected_element)
       end
     end
   end

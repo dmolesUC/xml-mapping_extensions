@@ -48,7 +48,18 @@ module XML
       io.string
     end
 
+    # Additional accessors needed for `#fallback_mapping`.
+    class Node
+      attr_reader :attrname
+      attr_accessor :mapping
+    end
+
     module ClassMethods
+
+      # Gets the configured root element names for this object.
+      # @return [Hash[Symbol, String]] the root element names for this object, by mapping.
+      attr_reader :root_element_names
+
       # Create a new instance of this class from the XML contained in
       # `xml`, which can be a string, REXML document, or REXML element
       # @param xml [String, REXML::Document, REXML::Element]
@@ -66,6 +77,26 @@ module XML
         load_from_xml(element, options)
       end
 
+      # Configures one mapping as a fallback for another, allowing mappings
+      # that differ e.g. from the default only in some small detail. Creates
+      # mapping nodes based on the fallback for all attributes for which a
+      # mapping node is present in the fallback but not in the primary, and
+      # likewise sets the root element name for the primary to the root element
+      # name for the fallback if it has not already been set.
+      #
+      # @param mapping [Symbol] the primary mapping
+      # @param fallback [Symbol] the fallback mapping to be used if the primary
+      #   mapping lacks a mapping node or root element name
+      def fallback_mapping(mapping, fallback)
+        mapping_nodes = nodes_by_attrname(mapping)
+        add_fallback_nodes(mapping_nodes, mapping, fallback)
+        xml_mapping_nodes_hash[mapping] = mapping_nodes.values
+
+        return if root_element_names[mapping]
+        fallback_name = root_element_names[fallback]
+        root_element_name(fallback_name, mapping: mapping)
+      end
+
       private
 
       # Whether the argument can be parsed as an `REXML::Document`, i.e. whether
@@ -76,9 +107,34 @@ module XML
       def can_parse(arg)
         arg.is_a?(String) ||
           (arg.respond_to?(:read) &&
-            arg.respond_to?(:readline) &&
-            arg.respond_to?(:nil?) &&
-            arg.respond_to?(:eof?))
+              arg.respond_to?(:readline) &&
+              arg.respond_to?(:nil?) &&
+              arg.respond_to?(:eof?))
+      end
+
+      # Returns the nodes for the specified mapping as a hash accessible by
+      # their attribute names.
+      # @param mapping [Symbol] the mapping
+      # @return [Hash[Symbol, Node]] the nodes
+      def nodes_by_attrname(mapping)
+        nodes = xml_mapping_nodes(mapping: mapping)
+        nodes.map { |node| [node.attrname, node] }.to_h
+      end
+
+      # Creates mapping nodes based on the fallback for all attributes for which a
+      # mapping node is present in the fallback but not in the primary.
+      # @param mapping_nodes [Hash[Symbol, Node]] The primary nodes
+      # @param mapping [Symbol] The primary mapping
+      # @param fallback [Symbol] The fallback mapping
+      def add_fallback_nodes(mapping_nodes, mapping, fallback)
+        xml_mapping_nodes(mapping: fallback).each do |fallback_node|
+          attrname = fallback_node.attrname
+          next if mapping_nodes.key?(attrname)
+
+          node = fallback_node.clone
+          fallback_node.mapping = mapping
+          mapping_nodes[attrname] = node
+        end
       end
     end
   end

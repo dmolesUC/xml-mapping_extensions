@@ -19,7 +19,7 @@ Additional mapping nodes and other utility code for working with
     - [Reading](#reading)
     - [Writing](#writing)
 - [Namespaces](#namespaces)
-
+- [Fallback mappings](#fallback-mappings)
 
 ## Extension methods
 
@@ -264,3 +264,63 @@ puts obj.write_xml
   <px:child>child 2</px:child>
 </px:element>
 ```
+
+## Fallback mappings
+
+The [XML::Mapping](http://multi-io.github.io/xml-mapping/) library provides an “alternate mapping”
+mechanism allowing
+[multiple XML mappings per class](http://multi-io.github.io/xml-mapping/#label-Multiple+Mappings+per+Class).
+However, it requires each mapping to be exhaustive -- an alternate mapping must redefine all attribute
+mappings defined in the primary, or else ignore those attributes. Sometimes, however, it is
+
+```ruby
+class ValidatingElement
+  include ::XML::Mapping
+
+  root_element_name 'element'
+  text_node :name, '@name'
+  text_node :value, '@value'
+
+  use_mapping :strict
+  numeric_node :value, '@value', writer: proc { |obj, xml| xml.add_attribute('value', Float(obj.value)) }
+end
+
+invalid_string = '<element name="abc" value="efg"/>'
+ValidatingElement.parse_xml(invalid_string, mapping: :strict)
+# ArgumentError: invalid value for Float(): "efg"
+
+elem = ValidatingElement.parse_xml(invalid_string) # OK
+# => #<XML::Mapping::ValidatingElement:0x007fa5631ae9c8>
+elem.write_xml
+# => "<element name='abc' value='efg'/>"
+
+elem.write_xml(mapping: :strict)
+# ArgumentError: invalid value for Float(): "efg"
+```
+
+So far, so good; but say we set a valid value and try to output with the
+`:strict` mapping?
+
+```ruby
+elem.value = 123
+elem.write_xml(mapping: :strict)
+# => <validating-element value='123'/>
+```
+
+Since the `:strict` mapping doesn't define a root element name, we get the
+default (based on the class name), and since it doesn't define a mapping
+for the `name` attribute, we lose that entirely.
+
+But if we add a fallback mapping --
+
+```ruby
+class ValidatingElement
+  fallback_mapping :strict, :_default
+end
+
+elem.write_xml(mapping: :strict)
+# => <element value='123' name='abc'/>
+```
+
+-- the `:strict` mapping now gets the root element name `element`,
+and the `name` attribute, as defined under the `:_default` mapping.

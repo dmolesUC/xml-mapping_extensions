@@ -1,3 +1,7 @@
+## 0.4.4 (12 July 2016)
+
+- Add '#fallback_mapping'
+
 ## 0.4.3 (11 July 2016)
 
 - Allow `write_xml` and `parse_xml` to take an `options` hash, to be passed on to `save_to_xml` or `load_from_xml`,
