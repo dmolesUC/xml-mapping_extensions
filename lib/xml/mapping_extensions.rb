@@ -88,8 +88,7 @@ module XML
       # @param fallback [Symbol] the fallback mapping to be used if the primary
       #   mapping lacks a mapping node or root element name
       def fallback_mapping(mapping, fallback)
-        mapping_nodes = nodes_by_attrname(mapping)
-        add_fallback_nodes(mapping_nodes, mapping, fallback)
+        mapping_nodes = add_fallback_nodes(nodes_by_attrname(mapping), mapping, fallback)
         xml_mapping_nodes_hash[mapping] = mapping_nodes.values
 
         return if root_element_names[mapping]
@@ -127,14 +126,16 @@ module XML
       # @param mapping [Symbol] The primary mapping
       # @param fallback [Symbol] The fallback mapping
       def add_fallback_nodes(mapping_nodes, mapping, fallback)
-        xml_mapping_nodes(mapping: fallback).each do |fallback_node|
-          attrname = fallback_node.attrname
-          next if mapping_nodes.key?(attrname)
+        all_nodes = nodes_by_attrname(fallback).map do |attrname, fallback_node|
+          [attrname, clone_node(fallback_node, mapping)]
+        end.to_h
+        all_nodes.merge!(mapping_nodes)
+      end
 
-          node = fallback_node.clone
-          fallback_node.mapping = mapping
-          mapping_nodes[attrname] = node
-        end
+      def clone_node(fallback_node, new_mapping)
+        node = fallback_node.clone
+        node.mapping = new_mapping
+        node
       end
     end
   end

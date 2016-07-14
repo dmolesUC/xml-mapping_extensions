@@ -1,3 +1,8 @@
+## 0.4.5 (14 July 2016)
+
+- Make `#fallback_mapping` preserve the order of the fallback mapping instead of appending all fallback
+  nodes after all explicitly remapped nodes
+
 ## 0.4.4 (12 July 2016)
 
 - Add '#fallback_mapping'
