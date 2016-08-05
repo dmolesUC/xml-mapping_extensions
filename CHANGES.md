@@ -1,3 +1,8 @@
+## 0.4.6 (next)
+
+- `TypesafeEnumNode.to_value()` now raises `ArgumentError` if the argument is not a valid value for the node's
+  enum type.
+
 ## 0.4.5 (14 July 2016)
 
 - Make `#fallback_mapping` preserve the order of the fallback mapping instead of appending all fallback

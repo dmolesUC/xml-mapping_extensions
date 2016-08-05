@@ -21,17 +21,20 @@ module XML
       end
 
       # Converts an enum value or value string to an enum instance
-      # @param xml_text the enum value or value string
-      # @return [TypesafeEnum::Base] an instance of the enum class declared in the initializer
+      # @param xml_text [String, nil] the enum value or value string
+      # @return [TypesafeEnum::Base, nil] an instance of the enum class declared in the initializer,
+      #   or nil if `xml_text` is nil
       def to_value(xml_text)
+        return nil unless xml_text
         enum_instance = @enum_class.find_by_value(xml_text)
         enum_instance = @enum_class.find_by_value_str(xml_text) unless enum_instance
+        fail ArgumentError, "No instance of enum class #{@enum_class.name} found for value '#{xml_text}'" unless enum_instance
         enum_instance
       end
 
       # Converts an enum value or value string to an enum instance
-      # @param enum_instance [TypesafeEnum::Base] an instance of the enum class declared in the initializer
-      # @return [String] the enum value as a string
+      # @param enum_instance [TypesafeEnum::Base, nil] an instance of the enum class declared in the initializer
+      # @return [String, nil] the enum value as a string, or nil if `enum_instance` is nil
       def to_xml_text(enum_instance)
         enum_instance.value.to_s if enum_instance
       end

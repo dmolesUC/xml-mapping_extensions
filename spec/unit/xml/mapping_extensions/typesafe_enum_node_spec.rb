@@ -69,8 +69,12 @@ module XML
         end
       end
 
-      it 'parses a missing value as nil' do
+      it 'parses a nil value as nil' do
         expect(to_my_string_enum(nil)).to be_nil
+      end
+
+      it 'raises ArgumentError for an invalid value' do
+        expect { to_my_string_enum('elvis') }.to raise_error(ArgumentError)
       end
 
       it 'doesn\'t set an attribute for a nil value' do
