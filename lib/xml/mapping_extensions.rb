@@ -34,7 +34,7 @@ module XML
 
   module Mapping
 
-    # Writes this mapped object as an XML string.
+    # Writes this mapped object as a pretty-printed XML string.
     #
     # @param options [Hash] the options to be passed to
     #   [XML::Mapping#save_to_xml](http://multi-io.github.io/xml-mapping/XML/Mapping.html#method-i-save_to_xml)
@@ -46,6 +46,27 @@ module XML
       io = ::StringIO.new
       formatter.write(xml, io)
       io.string
+    end
+
+    # Writes this mapped object to the specified file, as an XML document (including declaration).
+    #
+    # @param path [String] The path of the file to write to
+    # @param indent [Integer] The indentation level. Defaults to -1 (no indenting). Note
+    #   that this parameter will be ignored if `pretty` is present.
+    # @param pretty [Boolean] Whether to pretty-print the output. Defaults to `false`. Note
+    #   that this option overrides `indent`.
+    # @param options [Hash] the options to be passed to
+    #   [XML::Mapping#save_to_xml](http://multi-io.github.io/xml-mapping/XML/Mapping.html#method-i-save_to_xml)
+    def write_to_file(path, indent: -1, pretty: false, options: { mapping: :_default })
+      doc = REXML::Document.new
+      doc << REXML::XMLDecl.new
+      doc.elements[1] = save_to_xml(options)
+      File.open(path, 'w') do |f|
+        return doc.write(f, indent) unless pretty
+        formatter = REXML::Formatters::Pretty.new
+        formatter.compact = true
+        formatter.write(doc, f)
+      end
     end
 
     # Additional accessors needed for `#fallback_mapping`.

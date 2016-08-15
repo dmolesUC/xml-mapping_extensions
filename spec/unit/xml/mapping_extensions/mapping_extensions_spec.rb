@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tempfile'
+require 'tmpdir'
 
 module XML
   module Mapping
@@ -58,6 +59,37 @@ module XML
         xml_string = obj.write_xml(mapping: :alternate)
         expect(xml_string).to be_a(String)
         expect(xml_string).to be_xml(saved_xml)
+      end
+    end
+
+    describe '#write_to_file' do
+
+      before(:each) do
+        @obj = MXSpecObject.new
+        @obj.attribute = 123
+        @obj.text = 'element text'
+        @obj.children = ['child 1', 'child 2']
+        @expected = REXML::Document.new(@obj.write_xml)
+      end
+
+      it 'writes to a file' do
+        Dir.mktmpdir do |tmp|
+          outfile = "#{tmp}/mxspec.xml"
+          @obj.write_to_file(outfile, indent: 4)
+          outxml = File.read(outfile)
+          puts("'#{outxml}'")
+          expect(outxml).to be_xml(@expected)
+        end
+      end
+
+      it 'pretty-prints to a file' do
+        Dir.mktmpdir do |tmp|
+          outfile = "#{tmp}/mxspec.xml"
+          @obj.write_to_file(outfile, pretty: true)
+          outxml = File.read(outfile)
+          puts("'#{outxml}'")
+          expect(outxml).to be_xml(@expected)
+        end
       end
     end
 

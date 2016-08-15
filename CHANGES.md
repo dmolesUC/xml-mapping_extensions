@@ -1,7 +1,8 @@
-## 0.4.6 (next)
+## 0.4.6 (15 August 2016)
 
 - `TypesafeEnumNode.to_value()` now raises `ArgumentError` if the argument is not a valid value for the node's
   enum type.
+- Added `#write_to_file` to simplify writing a root element to a file. 
 
 ## 0.4.5 (14 July 2016)
 
@@ -10,7 +11,7 @@
 
 ## 0.4.4 (12 July 2016)
 
-- Add '#fallback_mapping'
+- Add `#fallback_mapping`
 
 ## 0.4.3 (11 July 2016)
 
