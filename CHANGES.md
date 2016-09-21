@@ -1,3 +1,5 @@
+## 0.4.7 (next)
+
 ## 0.4.6 (15 August 2016)
 
 - `TypesafeEnumNode.to_value()` now raises `ArgumentError` if the argument is not a valid value for the node's
