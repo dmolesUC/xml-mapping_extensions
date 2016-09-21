@@ -3,7 +3,7 @@ require 'spec_helper'
 module XML
   module Mapping
     class FMSpecObject
-      include ::XML::MappingExtensions
+      include ::XML::Mapping
 
       root_element_name 'element'
 

@@ -77,7 +77,6 @@ module XML
           outfile = "#{tmp}/mxspec.xml"
           @obj.write_to_file(outfile, indent: 4)
           outxml = File.read(outfile)
-          puts("'#{outxml}'")
           expect(outxml).to be_xml(@expected)
         end
       end
@@ -87,7 +86,6 @@ module XML
           outfile = "#{tmp}/mxspec.xml"
           @obj.write_to_file(outfile, pretty: true)
           outxml = File.read(outfile)
-          puts("'#{outxml}'")
           expect(outxml).to be_xml(@expected)
         end
       end

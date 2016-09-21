@@ -51,14 +51,14 @@ module XML
       it 'works with arrays mapped by custom nodes' do
         expected = '<holder-holder>
           <holders>
-            <holder value="foo">
-            <holder value="bar">
+            <holder><value value="foo"/></holder>
+            <holder><value value="bar"/></holder>
           </holders>
         </holder-holder>'
 
         hh = HolderHolder.new
         hh.holders = [Holder.new('foo'), Holder.new('bar')]
-        xml = hh.write_xml({mapping: :fancy})
+        xml = hh.write_xml(mapping: :fancy)
         expect(xml).to be_xml(expected)
       end
     end

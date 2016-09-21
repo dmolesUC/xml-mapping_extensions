@@ -75,6 +75,22 @@ module XML
       attr_accessor :mapping
     end
 
+    # Monkey-patch ArrayNode to regenerate marshallers and unmarshallers after cloning
+    class ArrayNode
+      old_init = instance_method(:initialize)
+      define_method(:initialize) do |*args|
+        @init_args = args
+        old_init.bind(self).call(*args)
+      end
+
+      define_method(:re_initialize) do |args|
+        old_init.bind(self).call(*args)
+      end
+
+      attr_reader :init_args
+      attr_accessor :options
+    end
+
     module ClassMethods
 
       # Gets the configured root element names for this object.
@@ -156,6 +172,13 @@ module XML
       def clone_node(fallback_node, new_mapping)
         node = fallback_node.clone
         node.mapping = new_mapping
+        if node.is_a?(ArrayNode)
+          args = node.init_args.clone
+          options = args.pop.clone
+          options[:mapping] = new_mapping
+          args << options
+          node.re_initialize(args)
+        end
         node
       end
     end

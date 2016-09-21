@@ -1,4 +1,6 @@
-## 0.4.7 (next)
+## 0.4.7 (21 September 2016)
+
+- Fix issue where `ArrayNodes` with `fallback_mapping` wouldn't honor the new mapping.
 
 ## 0.4.6 (15 August 2016)
 
