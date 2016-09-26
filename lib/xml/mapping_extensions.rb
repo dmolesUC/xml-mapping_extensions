@@ -1,3 +1,4 @@
+require 'rexml/formatters/transitive' # unaccountably, xml/mapping doesn't do this
 require 'xml/mapping'
 require 'stringio'
 

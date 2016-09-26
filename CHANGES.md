@@ -1,3 +1,8 @@
+## 0.4.8 (next)
+
+- Require `rexml/formatters/transitive` so that `XML::Mapping.save_to_file` works.
+- **TODO:** Deprecate `#write_to_file` in favor of `save_to_file`
+
 ## 0.4.7 (21 September 2016)
 
 - Fix issue where `ArrayNodes` with `fallback_mapping` wouldn't honor the new mapping.
