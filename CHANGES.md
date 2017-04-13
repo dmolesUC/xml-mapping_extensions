@@ -1,5 +1,6 @@
 ## 0.4.8 (next)
 
+- Update to Ruby 2.2.5
 - Require `rexml/formatters/transitive` so that `XML::Mapping.save_to_file` works.
 - **TODO:** Deprecate `#write_to_file` in favor of `save_to_file`
 
