@@ -4,7 +4,7 @@ module XML
   module MappingExtensions
 
     class MyStringEnum < TypesafeEnum::Base
-      [:FOO, :BAR, :BAZ_QUX].each { |k| new k }
+      %i[FOO BAR BAZ_QUX].each { |k| new k }
     end
 
     class MySymbolEnum < TypesafeEnum::Base

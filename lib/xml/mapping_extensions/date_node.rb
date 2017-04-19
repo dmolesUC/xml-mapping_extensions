@@ -30,7 +30,7 @@ module XML
       def to_xml_text(value)
         value = value.to_date if value.respond_to?(:to_date)
         text = value.iso8601 # use iso8601 instead of xmlschema in case of ActiveSupport shenanigans
-        (zulu && !text.end_with?('Z')) ? "#{text}Z" : text
+        zulu && !text.end_with?('Z') ? "#{text}Z" : text
       end
     end
     ::XML::Mapping.add_node_class DateNode

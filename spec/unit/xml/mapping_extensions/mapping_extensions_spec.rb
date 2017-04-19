@@ -27,7 +27,7 @@ module XML
 
       def <=>(other)
         return nil unless self.class == other.class
-        [:attribute, :text, :children].each do |p|
+        %i[attribute text children].each do |p|
           order = send(p) <=> other.send(p)
           return order if order != 0
         end
@@ -35,7 +35,7 @@ module XML
       end
 
       def hash
-        [:attribute, :text, :children].hash
+        %i[attribute text children].hash
       end
     end
 
@@ -126,7 +126,7 @@ module XML
       end
 
       it 'parses a file' do
-        xml_file = Tempfile.new(%w(parse_xml_spec.xml))
+        xml_file = Tempfile.new(%w[parse_xml_spec.xml])
         begin
           xml_file.write(@xml_string)
           xml_file.rewind

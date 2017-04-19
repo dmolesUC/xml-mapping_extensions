@@ -22,7 +22,7 @@ module XML
       # @raise [URI::InvalidURIError] if `uri` is nil, or a string that is not a valid URI
       # @raise [URI::InvalidURIError] if `schema_location` is a string that is not a valid URI
       def initialize(uri:, prefix: nil, schema_location: nil)
-        fail URI::InvalidURIError, 'uri cannot be nil' unless uri
+        raise URI::InvalidURIError, 'uri cannot be nil' unless uri
         @uri             = MappingExtensions.to_uri_str(uri)
         @prefix          = prefix
         @schema_location = MappingExtensions.to_uri_str(schema_location)
@@ -36,7 +36,7 @@ module XML
         other.class == self.class && other.state == state
       end
 
-      alias_method :eql?, :==
+      alias eql? ==
 
       def hash
         state.hash

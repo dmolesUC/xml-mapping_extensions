@@ -21,12 +21,12 @@ module XML
                    </array_node_spec_elem>'
         xml = REXML::Document.new(xml_str).root
         elem = ArrayNodeSpecElem.load_from_xml(xml)
-        expect(elem.child_nodes).to eq(%w(foo bar))
+        expect(elem.child_nodes).to eq(%w[foo bar])
       end
 
       it 'writes nested nodes' do
         elem = ArrayNodeSpecElem.new
-        elem.child_nodes = %w(foo bar)
+        elem.child_nodes = %w[foo bar]
         xml = elem.save_to_xml
         expected_xml = '<array_node_spec_elem>
                           <child_nodes>

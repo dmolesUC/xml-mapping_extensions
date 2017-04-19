@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
@@ -23,15 +24,15 @@ Gem::Specification.new do |spec|
   spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'mime-types', '~> 2.5'
+  spec.add_dependency 'mime-types', '~> 3.0'
   spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.5'
   spec.add_dependency 'xml-mapping', '~> 0.10'
 
   spec.add_development_dependency 'activesupport', '~> 4.2' # for testing
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
-  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rake', '>= 10.4'
   spec.add_development_dependency 'rspec', '~> 3.2'
-  spec.add_development_dependency 'rubocop', '~> 0.32.1'
+  spec.add_development_dependency 'rubocop', '~> 0.47'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'yard', '~> 0.8'

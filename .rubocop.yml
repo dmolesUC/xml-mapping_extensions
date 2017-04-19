@@ -1,3 +1,7 @@
+AllCops:
+  # Suppress complaints about post-2.0 syntax
+  TargetRubyVersion: 2.2
+
 # Disable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
   Enabled: False
@@ -16,4 +20,16 @@ Style/EmptyLinesAroundModuleBody:
 
 # Allow one line around block body (Style/EmptyLines will still disallow two or more)
 Style/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+# Unclear why it's a good idea to give parameters semantically meaningless names
+Style/SingleLineBlockParams:
+  Enabled: false
+
+# Produces monsters
+Style/MultilineOperationIndentation:
+  Enabled: false
+
+# 👎 to cultural imperialism
+Style/AsciiComments:
   Enabled: false
