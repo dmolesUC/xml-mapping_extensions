@@ -62,6 +62,25 @@ module XML
       end
     end
 
+    describe '#save_to_file' do
+      before(:each) do
+        @obj = MXSpecObject.new
+        @obj.attribute = 123
+        @obj.text = 'element text'
+        @obj.children = ['child 1', 'child 2']
+        @expected = REXML::Document.new(@obj.write_xml)
+      end
+
+      it 'writes to a file' do
+        Dir.mktmpdir do |tmp|
+          outfile = "#{tmp}/mxspec.xml"
+          @obj.save_to_file(outfile)
+          outxml = File.read(outfile)
+          expect(outxml).to be_xml(@expected)
+        end
+      end
+    end
+
     describe '#write_to_file' do
 
       before(:each) do
