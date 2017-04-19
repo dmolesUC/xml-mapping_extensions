@@ -1,8 +1,10 @@
-## 0.4.8 (next)
+## 0.4.8 (19 April 2017)
 
 - Update to Ruby 2.2.5
+- Update to mime-types 3.x, rubocop 0.47
 - Require `rexml/formatters/transitive` so that `XML::Mapping.save_to_file` works.
-- **TODO:** Deprecate `#write_to_file` in favor of `save_to_file`
+  - **Note:** `#write_to_file` is still recommended for simple use cases, since 
+    `#save_to_file` doesn't directly support pretty-printing.
 
 ## 0.4.7 (21 September 2016)
 
