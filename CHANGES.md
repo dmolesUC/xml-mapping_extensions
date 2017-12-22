@@ -1,3 +1,11 @@
+## 0.4.9 (next)
+
+- Update to Ruby 2.4.1
+- Update gems:
+  - typesafe_enum → 0.1.8
+  - rubocop → 0.52
+  - yard → 0.9.12
+
 ## 0.4.8 (19 April 2017)
 
 - Update to Ruby 2.2.5

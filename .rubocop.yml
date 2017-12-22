@@ -11,15 +11,15 @@ Style/Documentation:
   Enabled: false
 
 # Allow one line around class body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
 # Allow one line around module body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 # Allow one line around block body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
 # Unclear why it's a good idea to give parameters semantically meaningless names
@@ -27,7 +27,7 @@ Style/SingleLineBlockParams:
   Enabled: false
 
 # Produces monsters
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Enabled: false
 
 # 👎 to cultural imperialism
