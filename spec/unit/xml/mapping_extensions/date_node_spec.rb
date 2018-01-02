@@ -65,7 +65,7 @@ module XML
 
       it 'truncates a DateTime to a Date' do
         expected = '2002-09-24'
-        actual = to_text(DateTime.new(2002, 9, 24, 0, 1, 2))
+        actual = to_text(DateTime.new(2002, 9, 24, 0, 1, 2)) # rubocop:disable Style/DateTime
         expect(actual).to eq(expected)
       end
 
@@ -77,7 +77,7 @@ module XML
 
       it 'truncates a DateTime to a zulu date' do
         expected = '2002-09-24Z'
-        actual = to_zulu_text(DateTime.new(2002, 9, 24, 0, 1, 2))
+        actual = to_zulu_text(DateTime.new(2002, 9, 24, 0, 1, 2)) # rubocop:disable Style/DateTime
         expect(actual).to eq(expected)
       end
 

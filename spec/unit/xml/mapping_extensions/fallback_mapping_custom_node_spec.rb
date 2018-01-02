@@ -12,9 +12,9 @@ module XML
 
     class ValueNode < SingleAttributeNode
       def initialize(*args)
-        path, *args = super(*args)
+        path, *myargs = super(*args)
         @path = ::XML::XXPath.new(path)
-        args
+        myargs # rubocop:disable Lint/Void
       end
 
       def set_attr_value(xml, value)

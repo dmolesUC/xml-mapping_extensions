@@ -14,9 +14,9 @@ module XML
 
       # See `::XML::Mapping::SingleAttributeNode#initialize`
       def initialize(*args)
-        path, *args = super(*args)
+        path, *myargs = super(*args)
         @path = ::XML::XXPath.new(path)
-        args
+        myargs # rubocop:disable Lint/Void
       end
 
       # Implements `::XML::Mapping::SingleAttributeNode#extract_attr_value`.
@@ -25,7 +25,7 @@ module XML
       def extract_attr_value(xml)
         xml_text = default_when_xpath_err { @path.first(xml).text }
         to_value(xml_text) if xml_text
-      rescue => e
+      rescue StandardError => e
         bad_value = xml_text ? "'#{xml_text}'" : 'nil'
         raise e, "#{@owner}.#{@attrname}: Can't parse #{bad_value} as #{self.class}: #{e.message}"
       end

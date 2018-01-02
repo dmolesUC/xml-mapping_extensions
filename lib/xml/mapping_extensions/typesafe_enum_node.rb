@@ -27,7 +27,7 @@ module XML
       def to_value(xml_text)
         return nil unless xml_text
         enum_instance = @enum_class.find_by_value(xml_text)
-        enum_instance = @enum_class.find_by_value_str(xml_text) unless enum_instance
+        enum_instance ||= @enum_class.find_by_value_str(xml_text)
         raise ArgumentError, "No instance of enum class #{@enum_class.name} found for value '#{xml_text}'" unless enum_instance
         enum_instance
       end
