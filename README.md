@@ -26,7 +26,8 @@ Additional mapping nodes and other utility code for working with
 This gem adds two methods, `write_xml` and `parse_xml`, to XML mapping instances and classes respectively, to reduce
 boilerplate.
 
-The `write_xml` method supplements [XML::Mapping#save_to_xml] by writing the object out as a `String` rather than as an `REXML::Element`.
+The `write_xml` method supplements [XML::Mapping#save_to_xml](http://multi-io.github.io/xml-mapping/XML/Mapping.html#method-i-save_to_xml)
+by writing the object out as a `String` rather than as an `REXML::Element`.
 
 ```ruby
 elem = MyElement.new
@@ -102,6 +103,8 @@ class LaTeXRationalNode < XML::MappingExtensions::NodeBase
     "\\frac{#{value.numerator}}{#{value.denominator}}"
   end
 end
+
+XML::Mapping.add_node_class LaTeXRationalNode
 ```
 
 ### Provided implementations
@@ -134,13 +137,15 @@ end
 #### Reading
 
 ```ruby
-xml_str = '<my_elem>
-  <plain_date>1999-12-31</plain_date>
-  <zulu_date>2000-01-01Z</zulu_date>
-  <time>2000-01-01T02:34:56Z</time>
-  <uri>http://example.org</uri>
-  <mime_type>text/plain</mime_type>
-</my_elem>'
+xml_str = <<-XML
+  <my_elem>
+    <plain_date>1999-12-31</plain_date>
+    <zulu_date>2000-01-01Z</zulu_date>
+    <time>2000-01-01T02:34:56Z</time>
+    <uri>http://example.org</uri>
+    <mime_type>text/plain</mime_type>
+  </my_elem>
+XML
 
 xml_doc = REXML::Document.new(xml_str)
 xml_elem = xml_doc.root
