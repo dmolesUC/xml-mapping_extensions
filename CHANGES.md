@@ -1,4 +1,4 @@
-## 0.4.9 (next)
+## 0.4.9 (2 January 2018)
 
 - Update to Ruby 2.4.1
 - Update gems:
