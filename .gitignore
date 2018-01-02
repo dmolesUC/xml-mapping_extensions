@@ -1,6 +1,7 @@
 # ignore IntelliJ IDEA project entirely
 
 .idea
+*.iml
 
 # ignore Gemfile.lock in libraries
 
